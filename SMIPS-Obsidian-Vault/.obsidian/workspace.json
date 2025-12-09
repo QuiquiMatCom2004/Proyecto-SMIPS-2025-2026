@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "85eb7a84ba9d33bc",
+        "id": "55232805b302d561",
         "type": "tabs",
         "children": [
           {
-            "id": "d6bee5a65b10e7d5",
+            "id": "77aa8a777681a90f",
             "type": "leaf",
             "state": {
               "type": "graph",
@@ -176,30 +176,43 @@
       "bases:Crear nueva base": false
     }
   },
-  "active": "d6bee5a65b10e7d5",
+  "active": "77aa8a777681a90f",
   "lastOpenFiles": [
+    "Dashboard.md.tmp.61154.1765317380137",
+    "05-Data-Path/Data Path.md",
+    "Dashboard.md.tmp.61154.1765317367520",
+    "02-CPU/S-MIPS CPU.md",
+    "RESUMEN-FINAL-VAULT.md.tmp.61154.1765317345038",
+    "RESUMEN-FINAL-VAULT.md",
+    "RESUMEN-FINAL-VAULT.md.tmp.61154.1765316871472",
+    "GUIA-INTEGRACION-PRACTICA.md",
+    "GUIA-INTEGRACION-PRACTICA.md.tmp.61154.1765316871161",
+    "05-Data-Path.md",
+    "07-Analisis/Estado del Arte - Proyecto Completo.md",
+    "06-Cache/Direct-Mapped Cache Implementation.md",
+    "06-Cache/Direct-Mapped Cache Implementation.md.tmp.61154.1765316640635",
+    "04-Memory-Control/MASK Generator.md",
+    "RESUMEN-EJECUTIVO.md",
+    "README.md",
+    "04-Memory-Control/MASK Generator.md.tmp.61154.1765316519633",
+    "05-Data-Path/Instruction Decoder.md",
+    "04-Memory-Control/Word Selector.md",
+    "04-Memory-Control/Word Selector.md.tmp.61154.1765316424520",
+    "05-Data-Path/Program Counter.md",
+    "COMPONENTES-FALTANTES-COMPLETO.md",
+    "COMPONENTES-FALTANTES-COMPLETO.md.tmp.61154.1765316042193",
+    "05-Data-Path/Branch Control.md",
+    "05-Data-Path/ALU.md",
     "04-Memory-Control/Address Translator.md",
     "04-Memory-Control/Address Translator.md.tmp.43498.1765302857998",
-    "02-CPU/S-MIPS CPU.md",
     "Dashboard.md",
-    "05-Data-Path/Data Path.md",
     "07-Analisis/Test Status.md",
-    "README.md",
-    "05-Data-Path/Instruction Decoder.md",
     "01-Arquitectura/S-MIPS Complete Architecture.md",
     "VAULT-STATUS.md",
-    "05-Data-Path/Branch Control.md",
     "05-Data-Path/Branch Control.md.tmp.43498.1765301659715",
-    "05-Data-Path/Instruction Decoder.md.tmp.43498.1765301557929",
-    "05-Data-Path/Data Path.md.tmp.43498.1765301443350",
     "04-Memory-Control/Memory Control.md",
     "03-Control-Unit/Control Unit.md",
-    "05-Data-Path/ALU.md",
     "05-Data-Path/Register File.md",
-    "06-Cache/Instruction Cache.md",
-    "06-Cache/Data Cache.md",
-    "06-Cache/Cache System Overview.md",
-    "07-Analisis/Estado del Arte - Proyecto Completo.md",
-    "RESUMEN-EJECUTIVO.md"
+    "06-Cache/Instruction Cache.md"
   ]
 }
