@@ -8,38 +8,24 @@
   "collapse-color-groups": false,
   "colorGroups": [
     {
-      "query": "tag:#implementado",
-      "color": {
-        "a": 1,
-        "rgb": 5832780
-      }
-    },
-    {
-      "query": "tag:#faltante",
+      "query": "tag:#faltante  ",
       "color": {
         "a": 1,
         "rgb": 16711680
       }
     },
     {
-      "query": "tag:#validar",
+      "query": "tag:#parcial  ",
       "color": {
         "a": 1,
-        "rgb": 16776960
+        "rgb": 15508760
       }
     },
     {
-      "query": "path:03-Components",
+      "query": "tag:#implementado  ",
       "color": {
         "a": 1,
-        "rgb": 11657298
-      }
-    },
-    {
-      "query": "path:04-Signals",
-      "color": {
-        "a": 1,
-        "rgb": 5431378
+        "rgb": 1286152
       }
     }
   ],
@@ -49,10 +35,10 @@
   "nodeSizeMultiplier": 1.2,
   "lineSizeMultiplier": 1,
   "collapse-forces": false,
-  "centerStrength": 0.518713248970312,
-  "repelStrength": 10,
-  "linkStrength": 1,
-  "linkDistance": 250,
-  "scale": 0.6666666666666661,
-  "close": false
+  "centerStrength": 0.17983367983368,
+  "repelStrength": 14.5738045738046,
+  "linkStrength": 0.828482328482329,
+  "linkDistance": 210,
+  "scale": 0.7528979569712374,
+  "close": true
 }

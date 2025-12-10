@@ -1,7 +1,7 @@
 # Random Generator (Generador de Números Aleatorios)
 
 **Tipo**: Componente Auxiliar
-**Estado**: 🔴 #faltante
+**Estado**:✅  #implementado 
 **Ubicación**: **NO EXISTE**
 **Complejidad**: ⭐ Muy Simple
 **Prioridad**: 🟡 MEDIA

@@ -212,10 +212,10 @@ endmodule
 
 ### Tipo I - Stack
 
-| Instrucción | Opcode | ALU_OP | Señales |
-|-------------|--------|--------|---------|
-| PUSH Rs | 0x30 | - | MEM_WRITE=1 (SP-=4, Mem[SP]=Rs) |
-| POP Rt | 0x31 | - | REG_WRITE=1, MEM_READ=1 (Rt=Mem[SP], SP+=4) |
+| Instrucción | Opcode | ALU_OP | Señales                                     |
+| ----------- | ------ | ------ | ------------------------------------------- |
+| PUSH Rs     | 0x30   | -      | MEM_WRITE=1 (SP-=4, Mem[SP]=Rs)             |
+| POP Rt      | 0x31   | -      | REG_WRITE=1, MEM_READ=1 (Rt=Mem[SP], SP+=4) |
 
 ### Tipo J
 

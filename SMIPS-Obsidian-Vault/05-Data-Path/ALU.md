@@ -27,13 +27,13 @@ La ALU actual en s-mips.circ implementa todas las operaciones requeridas:
 
 ### Entradas
 
-| Puerto | Ancho | Fuente | Descripción |
-|--------|-------|--------|-------------|
-| `A` | 32 bits | [[Register File]] (Read Data 1) | Operando A (Rs) |
-| `B` | 32 bits | MUX ALU_B | Operando B (Rt o Immediate) |
-| `ALU_OP` | 4-6 bits | [[Instruction Decoder]] | Código de operación |
-| `SHAMT` | 5 bits | [[Instruction Decoder]] | Shift amount (para SLL/SRL/SRA) |
-| `CLK` | 1 bit | Sistema | Reloj (para MULT/DIV multi-ciclo) |
+| Puerto   | Ancho    | Fuente                          | Descripción                       |
+| -------- | -------- | ------------------------------- | --------------------------------- |
+| `A`      | 32 bits  | [[Register File]] (Read Data 1) | Operando A (Rs)                   |
+| `B`      | 32 bits  | MUX ALU_B                       | Operando B (Rt o Immediate)       |
+| `ALU_OP` | 4-6 bits | [[Instruction Decoder]]         | Código de operación               |
+| `SHAMT`  | 5 bits   | [[Instruction Decoder]]         | Shift amount (para SLL/SRL/SRA)   |
+| `CLK`    | 1 bit    | Sistema                         | Reloj (para MULT/DIV multi-ciclo) |
 
 ### Salidas
 

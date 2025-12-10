@@ -4,17 +4,21 @@
     "type": "split",
     "children": [
       {
-        "id": "55232805b302d561",
+        "id": "51b9616d75b64b89",
         "type": "tabs",
         "children": [
           {
-            "id": "77aa8a777681a90f",
+            "id": "a88d8409a6c41452",
             "type": "leaf",
             "state": {
-              "type": "graph",
-              "state": {},
-              "icon": "lucide-git-fork",
-              "title": "Vista gráfica"
+              "type": "markdown",
+              "state": {
+                "file": "05-Data-Path/Data Path.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Data Path"
             }
           }
         ]
@@ -40,7 +44,7 @@
                 "autoReveal": false
               },
               "icon": "lucide-folder-closed",
-              "title": "Explorador de archivos"
+              "title": "Files"
             }
           },
           {
@@ -49,7 +53,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "",
+                "query": "tag:#implementado",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -57,7 +61,7 @@
                 "sortOrder": "alphabetical"
               },
               "icon": "lucide-search",
-              "title": "Buscar"
+              "title": "Search"
             }
           },
           {
@@ -167,52 +171,52 @@
   },
   "left-ribbon": {
     "hiddenItems": {
-      "switcher:Abrir selector rápido": false,
-      "graph:Abrir vista gráfica": false,
-      "canvas:Crear nuevo lienzo": false,
-      "daily-notes:Abrir la nota de hoy": false,
-      "templates:Insertar plantilla": false,
-      "command-palette:Abrir paleta de comandos": false,
-      "bases:Crear nueva base": false
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false,
+      "bases:Create new base": false
     }
   },
-  "active": "77aa8a777681a90f",
+  "active": "a88d8409a6c41452",
   "lastOpenFiles": [
-    "Dashboard.md.tmp.61154.1765317380137",
+    "05-Data-Path/Instruction Decoder.md",
     "05-Data-Path/Data Path.md",
+    "05-Data-Path/ALU.md",
+    "05-Data-Path/Branch Control.md",
+    "05-Data-Path/Instruction Register.md",
+    "05-Data-Path/Random Generator.md",
+    "05-Data-Path/Program Counter.md",
+    "05-Data-Path/Register File.md",
+    "01-Arquitectura/S-MIPS Complete Architecture.md",
+    "07-Analisis/Estado del Arte - Proyecto Completo.md",
+    "RESUMEN-FINAL-VAULT.md",
+    "GUIA-INTEGRACION-PRACTICA.md",
+    "Dashboard.md.tmp.61154.1765317380137",
     "Dashboard.md.tmp.61154.1765317367520",
     "02-CPU/S-MIPS CPU.md",
     "RESUMEN-FINAL-VAULT.md.tmp.61154.1765317345038",
-    "RESUMEN-FINAL-VAULT.md",
     "RESUMEN-FINAL-VAULT.md.tmp.61154.1765316871472",
-    "GUIA-INTEGRACION-PRACTICA.md",
     "GUIA-INTEGRACION-PRACTICA.md.tmp.61154.1765316871161",
     "05-Data-Path.md",
-    "07-Analisis/Estado del Arte - Proyecto Completo.md",
     "06-Cache/Direct-Mapped Cache Implementation.md",
     "06-Cache/Direct-Mapped Cache Implementation.md.tmp.61154.1765316640635",
     "04-Memory-Control/MASK Generator.md",
     "RESUMEN-EJECUTIVO.md",
     "README.md",
     "04-Memory-Control/MASK Generator.md.tmp.61154.1765316519633",
-    "05-Data-Path/Instruction Decoder.md",
     "04-Memory-Control/Word Selector.md",
     "04-Memory-Control/Word Selector.md.tmp.61154.1765316424520",
-    "05-Data-Path/Program Counter.md",
     "COMPONENTES-FALTANTES-COMPLETO.md",
     "COMPONENTES-FALTANTES-COMPLETO.md.tmp.61154.1765316042193",
-    "05-Data-Path/Branch Control.md",
-    "05-Data-Path/ALU.md",
     "04-Memory-Control/Address Translator.md",
     "04-Memory-Control/Address Translator.md.tmp.43498.1765302857998",
     "Dashboard.md",
     "07-Analisis/Test Status.md",
-    "01-Arquitectura/S-MIPS Complete Architecture.md",
     "VAULT-STATUS.md",
-    "05-Data-Path/Branch Control.md.tmp.43498.1765301659715",
     "04-Memory-Control/Memory Control.md",
-    "03-Control-Unit/Control Unit.md",
-    "05-Data-Path/Register File.md",
-    "06-Cache/Instruction Cache.md"
+    "03-Control-Unit/Control Unit.md"
   ]
 }

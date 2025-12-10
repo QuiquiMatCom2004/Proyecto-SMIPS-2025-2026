@@ -14,7 +14,7 @@ El Data Path es el componente central que integra todos los elementos de procesa
 
 **🟡 90% IMPLEMENTADO**
 
-### ✅ Componentes Implementados (10/11)
+### ✅ Componentes Implementados (11/11)
 
 1. ✅ [[Instruction Register]] - Almacena instrucción actual
 2. ✅ [[Instruction Decoder]] - Decodifica 40+ instrucciones
@@ -26,10 +26,7 @@ El Data Path es el componente central que integra todos los elementos de procesa
 8. ✅ MUX ALU_B - Selección operando B (Rt o Immediate)
 9. ✅ MUX Rd/Rt - Selección registro destino
 10. ✅ Sign/Zero Extenders - Extensión de inmediatos
-
-### 🔴 Componentes Faltantes (1/11)
-
-1. 🔴 [[Random Generator]] - Generador LFSR para instrucción RND
+11. ✅ [[Random Generator]] - Generador LFSR para instrucción RND
 
 ## Arquitectura del Data Path
 
@@ -37,70 +34,70 @@ El Data Path es el componente central que integra todos los elementos de procesa
 ┌─────────────────────────────────────────────────────────────────────┐
 │                          DATA PATH                                  │
 │                                                                     │
-│  ┌──────────────────────────────────────────────────────────────┐  │
-│  │              INSTRUCTION REGISTER (IR)                       │  │
-│  │  • 32 bits                                                   │  │
-│  │  • Cargado desde Memory Control                             │  │
-│  │  • Salida a Instruction Decoder                             │  │
-│  └──────────────────────────────────────────────────────────────┘  │
+│  ┌──────────────────────────────────────────────────────────────┐   │
+│  │              INSTRUCTION REGISTER (IR)                       │   │
+│  │  • 32 bits                                                   │   │
+│  │  • Cargado desde Memory Control                              │   │
+│  │  • Salida a Instruction Decoder                              │   │
+│  └──────────────────────────────────────────────────────────────┘   │
 │                              ↓                                      │
-│  ┌──────────────────────────────────────────────────────────────┐  │
-│  │           INSTRUCTION DECODER                                │  │
-│  │  • Extrae: opcode, Rs, Rt, Rd, shamt, funct, immediate     │  │
-│  │  • Genera: ALU_OP, REG_WRITE, MEM_READ, MEM_WRITE, etc.    │  │
-│  │  • 40+ instrucciones soportadas                            │  │
-│  └──────────────────────────────────────────────────────────────┘  │
+│  ┌──────────────────────────────────────────────────────────────┐   │
+│  │           INSTRUCTION DECODER                                │   │
+│  │  • Extrae: opcode, Rs, Rt, Rd, shamt, funct, immediate       │   │
+│  │  • Genera: ALU_OP, REG_WRITE, MEM_READ, MEM_WRITE, etc.      │   │
+│  │  • 40+ instrucciones soportadas                              │   │
+│  └──────────────────────────────────────────────────────────────┘   │
 │         │        │        │         │          │                    │
 │         │        │        │         │          │                    │
-│       Rs(5)   Rt(5)    Rd(5)   Imm(16)    ALU_OP                  │
+│       Rs(5)   Rt(5)    Rd(5)   Imm(16)    ALU_OP                    │
 │         │        │        │         │          │                    │
 │         ↓        ↓        │         ↓          ↓                    │
-│  ┌─────────────────┐     │    ┌────────┐  ┌─────────────────┐     │
-│  │ REGISTER FILE   │     │    │Sign/   │  │      ALU        │     │
-│  │ • 32 regs (R0-R31)    │    │Zero    │  │ • ADD/SUB/etc.  │     │
-│  │ • R0 = 0        │     │    │Extend  │  │ • 40+ ops       │     │
-│  │ • Hi/Lo special │     │    └────────┘  │ • Hi/Lo output  │     │
-│  │                 │     │         │       │ • ZERO flag     │     │
-│  │ READ_REG_1 = Rs │     │         │       │ • NEG flag      │     │
-│  │ READ_REG_2 = Rt │     │         │       └─────────────────┘     │
+│  ┌─────────────────┐     │    ┌────────┐  ┌─────────────────┐       │
+│  │ REGISTER FILE   │     │    │Sign/   │  │      ALU        │       │
+│  │ • 32 regs (R0-R31)    │    │Zero    │  │ • ADD/SUB/etc.  │       │
+│  │ • R0 = 0        │     │    │Extend  │  │ • 40+ ops       │       │
+│  │ • Hi/Lo special │     │    └────────┘  │ • Hi/Lo output  │       │
+│  │                 │     │         │       │ • ZERO flag     │      │
+│  │ READ_REG_1 = Rs │     │         │       │ • NEG flag      │      │
+│  │ READ_REG_2 = Rt │     │         │       └─────────────────┘      │
 │  │                 │     │         │                 ↑              │
-│  │ READ_DATA_1 ────┼─────┼─────────┼─────────────→ A               │
+│  │ READ_DATA_1 ────┼─────┼─────────┼─────────────→ A                │
 │  │                 │     │         │                                │
-│  │ READ_DATA_2 ────┼─────┼─────────┼──→ MUX_B ──→ B                │
+│  │ READ_DATA_2 ────┼─────┼─────────┼──→ MUX_B ──→ B                 │
 │  │                 │     │         │      ↑                         │
 │  └─────────────────┘     │         └──────┘                         │
 │         ↑                │           (Rt o Imm)                     │
 │         │                │                                          │
 │         │                ↓                                          │
-│    WRITE_REG ←─── MUX_RD_RT                                        │
+│    WRITE_REG ←─── MUX_RD_RT                                         │
 │         │           ↑     ↑                                         │
 │         │           Rd    Rt                                        │
 │         │                                                           │
-│    WRITE_DATA ←── MUX_WRITEBACK ←─┬─ ALU_RESULT                    │
+│    WRITE_DATA ←── MUX_WRITEBACK ←─┬─ ALU_RESULT                     │
 │                        ↑           ├─ MEMORY_DATA                   │
 │                        │           ├─ HI_OUT                        │
 │                        │           ├─ LO_OUT                        │
 │                        │           ├─ PC+4                          │
-│                        │           ├─ RND_VALUE 🔴                  │
+│                        │           ├─ RND_VALUE                     │
 │                        │           └─ KBD_VALUE                     │
 │                        │                                            │
 │                     Control                                         │
 │                     Signals                                         │
 │                                                                     │
-│  ┌──────────────────────────────────────────────────────────────┐  │
-│  │              BRANCH CONTROL                                  │  │
-│  │  • Calcula next PC                                          │  │
-│  │  • PC+4 (secuencial)                                        │  │
-│  │  • PC+4+offset×4 (branch)                                   │  │
-│  │  • {PC[31:28], addr[25:0], 00} (jump)                      │  │
-│  │  • Register value (JR)                                      │  │
-│  └──────────────────────────────────────────────────────────────┘  │
+│  ┌──────────────────────────────────────────────────────────────┐   │
+│  │              BRANCH CONTROL                                  │   │
+│  │  • Calcula next PC                                           │   │
+│  │  • PC+4 (secuencial)                                         │   │
+│  │  • PC+4+offset×4 (branch)                                    │   │
+│  │  • {PC[31:28], addr[25:0], 00} (jump)                        │   │
+│  │  • Register value (JR)                                       │   │
+│  └──────────────────────────────────────────────────────────────┘   │
 │                              ↓                                      │
-│  ┌──────────────────────────────────────────────────────────────┐  │
-│  │              PROGRAM COUNTER (PC)                            │  │
-│  │  • 32 bits                                                   │  │
-│  │  • Incrementa cada ciclo de instrucción                     │  │
-│  └──────────────────────────────────────────────────────────────┘  │
+│  ┌──────────────────────────────────────────────────────────────┐   │
+│  │              PROGRAM COUNTER (PC)                            │   │
+│  │  • 32 bits                                                   │   │
+│  │  • Incrementa cada ciclo de instrucción                      │   │
+│  └──────────────────────────────────────────────────────────────┘   │
 │                                                                     │
 └─────────────────────────────────────────────────────────────────────┘
 ```
