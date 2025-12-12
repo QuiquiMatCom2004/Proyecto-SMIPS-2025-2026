@@ -1,7 +1,7 @@
 # Control Unit (Unidad de Control)
 
 **Tipo**: Componente de Control Principal
-**Estado**: 🔴 #faltante **CRÍTICO - BLOQUEANTE TOTAL**
+**Estado**: 🔴 #implementado  
 **Ubicación**: **NO EXISTE**
 **Complejidad**: ⭐⭐⭐ Tricky
 **Prioridad**: 🚨🚨🚨 MÁXIMA URGENCIA
@@ -100,28 +100,28 @@ stateDiagram-v2
 
 ### Tabla de Transiciones
 
-| Estado Actual | Condición | Próximo Estado | Señales Activas |
-|---------------|-----------|----------------|-----------------|
-| IDLE | CLK=1, RESET=0 | START_FETCH | - |
-| START_FETCH | - | WAIT_INST_READ | START_MC=1, R/W=0 |
-| WAIT_INST_READ | MC_END=0 | WAIT_INST_READ | - |
-| WAIT_INST_READ | MC_END=1 | LOAD_INST | - |
-| LOAD_INST | - | EXECUTE_INST | LOAD_I=1 |
-| EXECUTE_INST | - | CHECK_INST | EXECUTE=1 |
-| CHECK_INST | HALT=1 | HALT_STATE | - |
-| CHECK_INST | MC_NEEDED=1, IS_WRITE=1 | START_MEM_WRITE | - |
-| CHECK_INST | MC_NEEDED=1, IS_WRITE=0 | START_MEM_READ | - |
-| CHECK_INST | MC_NEEDED=0 | START_FETCH | - |
-| START_MEM_WRITE | - | WAIT_WRITE | START_MC=1, R/W=1 |
-| WAIT_WRITE | MC_END=0 | WAIT_WRITE | - |
-| WAIT_WRITE | MC_END=1 | CHECK_STACK | - |
-| START_MEM_READ | - | WAIT_READ | START_MC=1, R/W=0 |
-| WAIT_READ | MC_END=0 | WAIT_READ | - |
-| WAIT_READ | MC_END=1 | CHECK_STACK | - |
-| CHECK_STACK | !PUSH, !POP | START_FETCH | - |
-| CHECK_STACK | PUSH (1st cycle done) | START_MEM_READ | PUSH_LOAD=1 |
-| CHECK_STACK | POP (1st cycle done) | START_MEM_WRITE | - |
-| HALT_STATE | Always | HALT_STATE | - |
+| Estado Actual   | Condición               | Próximo Estado  | Señales Activas   |
+| --------------- | ----------------------- | --------------- | ----------------- |
+| IDLE            | CLK=1, RESET=0          | START_FETCH     | -                 |
+| START_FETCH     | -                       | WAIT_INST_READ  | START_MC=1, R/W=0 |
+| WAIT_INST_READ  | MC_END=0                | WAIT_INST_READ  | -                 |
+| WAIT_INST_READ  | MC_END=1                | LOAD_INST       | -                 |
+| LOAD_INST       | -                       | EXECUTE_INST    | LOAD_I=1          |
+| EXECUTE_INST    | -                       | CHECK_INST      | EXECUTE=1         |
+| CHECK_INST      | HALT=1                  | HALT_STATE      | -                 |
+| CHECK_INST      | MC_NEEDED=1, IS_WRITE=1 | START_MEM_WRITE | -                 |
+| CHECK_INST      | MC_NEEDED=1, IS_WRITE=0 | START_MEM_READ  | -                 |
+| CHECK_INST      | MC_NEEDED=0             | START_FETCH     | -                 |
+| START_MEM_WRITE | -                       | WAIT_WRITE      | START_MC=1, R/W=1 |
+| WAIT_WRITE      | MC_END=0                | WAIT_WRITE      | -                 |
+| WAIT_WRITE      | MC_END=1                | CHECK_STACK     | -                 |
+| START_MEM_READ  | -                       | WAIT_READ       | START_MC=1, R/W=0 |
+| WAIT_READ       | MC_END=0                | WAIT_READ       | -                 |
+| WAIT_READ       | MC_END=1                | CHECK_STACK     | -                 |
+| CHECK_STACK     | !PUSH, !POP             | START_FETCH     | -                 |
+| CHECK_STACK     | PUSH (1st cycle done)   | START_MEM_READ  | PUSH_LOAD=1       |
+| CHECK_STACK     | POP (1st cycle done)    | START_MEM_WRITE | -                 |
+| HALT_STATE      | Always                  | HALT_STATE      | -                 |
 
 ## Entradas
 
@@ -132,13 +132,13 @@ stateDiagram-v2
 | `RESET` | 1 bit | Reset sincrónico |
 
 ### Desde [[Data Path]]
-| Puerto | Ancho | Descripción |
-|--------|-------|-------------|
-| [[HALT]] | 1 bit | Señal de instrucción HALT |
-| [[MC_NEEDED]] | 1 bit | Indica que se necesita acceso a memoria |
-| [[IS_WRITE]] | 1 bit | Tipo de acceso: 0=lectura, 1=escritura |
-| `PUSH` | 1 bit | Señal de instrucción PUSH (para 2º ciclo) |
-| `POP` | 1 bit | Señal de instrucción POP (para 2º ciclo) |
+| Puerto        | Ancho | Descripción                               |
+| ------------- | ----- | ----------------------------------------- |
+| [[HALT]]      | 1 bit | Señal de instrucción HALT                 |
+| [[MC_NEEDED]] | 1 bit | Indica que se necesita acceso a memoria   |
+| [[IS_WRITE]]  | 1 bit | Tipo de acceso: 0=lectura, 1=escritura    |
+| `PUSH`        | 1 bit | Señal de instrucción PUSH (para 2º ciclo) |
+| `POP`         | 1 bit | Señal de instrucción POP (para 2º ciclo)  |
 
 ### Desde [[Memory Control]]
 | Puerto | Ancho | Descripción |
