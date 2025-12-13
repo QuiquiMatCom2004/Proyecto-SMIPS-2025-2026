@@ -1,7 +1,7 @@
 # Memory State Machine (Máquina de Estados de Memoria)
 
 **Tipo**: FSM (Finite State Machine)
-**Estado**: 🔴 #faltante **BLOQUEANTE**
+**Estado**: #implementado 
 **Ubicación**: **NO EXISTE** (debe estar dentro de [[Memory Control]])
 **Complejidad**: ⭐⭐ Moderada
 **Prioridad**: 🚨🚨 URGENTE
@@ -65,15 +65,15 @@ stateDiagram-v2
 
 ## Tabla de Transiciones
 
-| Estado Actual | Condición | Próximo Estado | Acciones |
-|---------------|-----------|----------------|----------|
-| IDLE | START_MC=0 | IDLE | MC_END=0, CS=0 |
-| IDLE | START_MC=1 | LOAD_ADDR | Capturar ADDRESS, R/W |
-| LOAD_ADDR | Always | INIT_WAIT | CS=1, R/W_RAM ← R/W, cargar addr |
-| INIT_WAIT | Always | WAIT_CYCLES | Leer RT o WT, counter=0 |
-| WAIT_CYCLES | counter < target | WAIT_CYCLES | counter++ |
-| WAIT_CYCLES | counter == target | COMPLETE | - |
-| COMPLETE | Always | IDLE | MC_END=1, CS=0 |
+| Estado Actual | Condición         | Próximo Estado | Acciones                         |
+| ------------- | ----------------- | -------------- | -------------------------------- |
+| IDLE          | START_MC=0        | IDLE           | MC_END=0, CS=0                   |
+| IDLE          | START_MC=1        | LOAD_ADDR      | Capturar ADDRESS, R/W            |
+| LOAD_ADDR     | Always            | INIT_WAIT      | CS=1, R/W_RAM ← R/W, cargar addr |
+| INIT_WAIT     | Always            | WAIT_CYCLES    | Leer RT o WT, counter=0          |
+| WAIT_CYCLES   | counter < target  | WAIT_CYCLES    | counter++                        |
+| WAIT_CYCLES   | counter == target | COMPLETE       | -                                |
+| COMPLETE      | Always            | IDLE           | MC_END=1, CS=0                   |
 
 ## Señales de Estado
 

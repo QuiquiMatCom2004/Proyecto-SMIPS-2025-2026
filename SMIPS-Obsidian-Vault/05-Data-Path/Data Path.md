@@ -1,7 +1,7 @@
 # Data Path (Camino de Datos)
 
 **Tipo**: Componente Integrador Central
-**Estado**: 🟡 #parcial **90% IMPLEMENTADO**
+**Estado**: 🟡 #implementado 
 **Ubicación**: `s-mips.circ` → CPU → Data Path
 **Complejidad**: ⭐⭐⭐⭐⭐ Muy Compleja (integra todos los componentes)
 **Prioridad**: 🟡 CASI COMPLETO (falta Random Generator)

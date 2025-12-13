@@ -1,7 +1,7 @@
 # Word Selector (Selector de Palabra)
 
 **Tipo**: Lógica Combinacional Personalizada
-**Estado**: 🔴 #faltante **BLOQUEANTE**
+**Estado**: 🔴 #implementado 
 **Ubicación**: **NO EXISTE** (debe estar dentro de [[Memory Control]])
 **Complejidad**: ⭐⭐ Moderada
 **Prioridad**: 🚨🚨 URGENTE

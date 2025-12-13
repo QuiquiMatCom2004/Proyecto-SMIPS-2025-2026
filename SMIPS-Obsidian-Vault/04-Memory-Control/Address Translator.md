@@ -1,7 +1,7 @@
 # Address Translator (Traductor de Direcciones)
 
 **Tipo**: Subcomponente de Memory Control
-**Estado**: 🔴 #faltante
+**Estado**: 🔴 #implementado 
 **Ubicación**: `s-mips.circ` → CPU → Memory Control → Address Translator
 **Complejidad**: ⭐⭐ Moderada
 **Prioridad**: 🔴 ALTA (parte de Memory Control)

@@ -1,7 +1,7 @@
 # Little-Endian Converter (Conversor de Endianness)
 
 **Tipo**: Circuito Combinacional
-**Estado**: 🔴 #faltante **BLOQUEANTE**
+**Estado**: 🔴 #implementado 
 **Ubicación**: **NO EXISTE** (debe estar dentro de [[Memory Control]])
 **Complejidad**: ⭐ Simple
 **Prioridad**: 🚨🚨 URGENTE
