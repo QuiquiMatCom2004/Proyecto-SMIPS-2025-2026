@@ -1,11 +1,11 @@
 # Random Generator (Generador de Números Aleatorios)
 
 **Tipo**: Componente Auxiliar
-**Estado**:✅  #implementado 
-**Ubicación**: **NO EXISTE**
-**Complejidad**: ⭐ Muy Simple
-**Prioridad**: 🟡 MEDIA
-**Tiempo estimado**: 2-3 horas
+**Estado**: ✅ IMPLEMENTADO (Componente de librería Logisim)
+**Ubicación**: s-mips.circ - Librería Memory (lib="4"), utilizado en DATA PATH
+**Complejidad**: ⭐ Muy Simple (componente nativo de Logisim)
+**Prioridad**: ✅ COMPLETO
+**Tiempo estimado**: N/A (ya implementado)
 
 ## Descripción
 
@@ -285,14 +285,16 @@ halt
 
 ## Archivo en s-mips.circ
 
-**Ubicación esperada**: Subcircuito "Random Generator" dentro de [[Data Path]]
+**Ubicación REAL**: ✅ IMPLEMENTADO - Componente nativo de Logisim
+- **Biblioteca**: lib="4" (Memory)
+- **Componente**: `<comp lib="4" loc="(1630,1540)" name="Random">`
+- **Integración**: Conectado directamente en DATA PATH
 
 **Conexiones**:
 ```
 Data Path
-├─ Random Generator (subcircuito)
-│  ├─ IN: CLK (del sistema)
-│  ├─ IN: ENABLE (de Instruction Decoder)
+├─ Random (componente de librería Logisim)
+│  ├─ IN: CLK (del sistema) - automático
 │  └─ OUT: RANDOM_VALUE (32 bits)
 │
 └─ MUX Writeback
@@ -300,21 +302,13 @@ Data Path
    └─ Select: WR_SEL
 ```
 
-## Estimación de Implementación
+## ✅ Estado de Implementación
 
-**Complejidad**: ⭐ Muy Simple
-**Tiempo**: 2-3 horas
-**Prioridad**: 🟡 Media (solo afecta 1 instrucción)
+**Estado**: ✅ **COMPLETO - IMPLEMENTADO EN s-mips.circ**
 
-### Desglose
+El componente Random Generator está implementado utilizando el componente nativo "Random" de la librería Memory de Logisim (lib="4"). Este componente genera valores pseudoaleatorios de 32 bits automáticamente en cada ciclo de reloj.
 
-1. Crear subcircuito "Random Generator" (30 min)
-2. Implementar LFSR con taps (45 min)
-3. Conectar a Data Path (30 min)
-4. Modificar Instruction Decoder para RND (30 min)
-5. Validar con tests (45 min)
-
-**Total**: 2-3 horas
+**NOTA**: No fue necesario implementar un LFSR personalizado, ya que Logisim proporciona un generador de números aleatorios como componente de librería estándar.
 
 ## Enlaces Relacionados
 

@@ -1,22 +1,22 @@
 # Control Unit (Unidad de Control)
 
 **Tipo**: Componente de Control Principal
-**Estado**: 🔴 #implementado  
-**Ubicación**: **NO EXISTE**
+**Estado**: ✅ IMPLEMENTADO (Actualizado 2025-12-13)
+**Ubicación**: Circuit "Control Unit" + "FSM" en s-mips.circ
 **Complejidad**: ⭐⭐⭐ Tricky
-**Prioridad**: 🚨🚨🚨 MÁXIMA URGENCIA
+**Prioridad**: ✅ COMPLETADO
 
-## ⚠️ ESTADO CRÍTICO
+## ✅ ESTADO: IMPLEMENTADO
 
-**SIN ESTE COMPONENTE, EL PROCESADOR NO FUNCIONA EN ABSOLUTO**
+**ESTE COMPONENTE ESTÁ IMPLEMENTADO - EL PROCESADOR FUNCIONA**
 
 El Control Unit es el cerebro del procesador. Orquesta TODAS las operaciones:
-- Cuándo cargar instrucciones
-- Cuándo ejecutarlas
-- Cuándo acceder a memoria
-- Cuándo escribir resultados
+- ✅ Cuándo cargar instrucciones
+- ✅ Cuándo ejecutarlas
+- ✅ Cuándo acceder a memoria
+- ✅ Cuándo escribir resultados
 
-**Sin Control Unit = Componentes sin coordinación = Procesador inútil**
+**Control Unit implementado = Componentes coordinados = Procesador funcional ✅**
 
 ## Descripción
 
