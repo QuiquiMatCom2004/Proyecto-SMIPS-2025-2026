@@ -594,6 +594,106 @@ ZeroExt   = 0x0000FFFF (65535 unsigned)
 
 ---
 
+## 📊 Flujo de Señales Completo (Todas las Conexiones)
+
+### De Memory Control → Data Path
+| Señal | Ancho | Descripción |
+|-------|-------|-------------|
+| `INST_IN` | 32 bits | Instrucción leída de memoria → Instruction Register |
+
+### De Control Unit → Data Path
+| Señal | Ancho | Descripción |
+|-------|-------|-------------|
+| `LOAD_I` | 1 bit | Cargar instrucción en Instruction Register |
+| `EN` | 1 bit | Data Path Enable (habilitar ejecución) |
+| `CLK_DP` | 1 bit | Clock del Data Path |
+| `CLR` | 1 bit | Clear/Reset global del Data Path |
+
+### De Instruction Register → Instruction Decoder
+| Señal | Ancho | Descripción |
+|-------|-------|-------------|
+| `IR` | 32 bits | Instrucción completa para decodificar |
+
+### De Instruction Decoder → Register File
+| Señal | Ancho | Descripción |
+|-------|-------|-------------|
+| `READ_REG_1` | 5 bits | Dirección de Rs (registro fuente 1) |
+| `READ_REG_2` | 5 bits | Dirección de Rt (registro fuente 2) |
+| `WRITE_REG` | 5 bits | Dirección de Rd o Rt (destino, vía MUX) |
+| `REG_WRITE` | 1 bit | Enable de escritura en Register File |
+
+### De Register File → ALU
+| Señal | Ancho | Descripción |
+|-------|-------|-------------|
+| `READ_DATA_1` | 32 bits | Contenido de Rs → Operando A de ALU |
+| `READ_DATA_2` | 32 bits | Contenido de Rt → MUX_B → Operando B (o immediate) |
+
+### De ALU → Register File
+| Señal | Ancho | Descripción |
+|-------|-------|-------------|
+| `RESULT` | 32 bits | Resultado de operación → MUX Writeback → WRITE_DATA |
+| `HI` | 32 bits | Upper 32 bits (MULT/DIV) → HI_IN |
+| `LO` | 32 bits | Lower 32 bits (MULT/DIV) → LO_IN |
+
+### De ALU → Branch Control
+| Señal | Ancho | Descripción |
+|-------|-------|-------------|
+| `ZERO` | 1 bit | Flag: resultado = 0 (para BEQ) |
+| `NEGATIVE` | 1 bit | Flag: resultado < 0 (para BLEZ, BLTZ, BGTZ) |
+
+### De Branch Control → Program Counter
+| Señal | Ancho | Descripción |
+|-------|-------|-------------|
+| `PC_NEXT` | 32 bits | Próximo valor de PC (secuencial/branch/jump) |
+
+### De Register File → Memory Control
+| Señal | Ancho | Descripción |
+|-------|-------|-------------|
+| `READ_DATA_2` | 32 bits | Dato a escribir en memoria (para SW/PUSH) |
+
+### De ALU → Memory Control
+| Señal | Ancho | Descripción |
+|-------|-------|-------------|
+| `RESULT` | 32 bits | Dirección efectiva para LW/SW (base + offset) |
+
+### De Data Path → Control Unit
+| Señal | Ancho | Descripción |
+|-------|-------|-------------|
+| `HALT` | 1 bit | Señal de instrucción HALT |
+| `MC_NEEDED` | 1 bit | Indica si necesita acceso a memoria (LW/SW/PUSH/POP) |
+
+### Multiplexores Internos Detallados
+
+#### MUX ALU_B (2 entradas)
+**Selector**: `ALU_SRC` [1 bit]
+```
+ALU_SRC = 0 → ALU_B = READ_DATA_2 (Rt) - Para R-type
+ALU_SRC = 1 → ALU_B = SignExt(immediate) - Para I-type arithmetic
+```
+
+#### MUX Rd/Rt (2 entradas)
+**Selector**: `REG_DST` [1 bit]
+```
+REG_DST = 0 → WRITE_REG = Rt - Para I-type (ADDI, LW)
+REG_DST = 1 → WRITE_REG = Rd - Para R-type (ADD, SUB)
+
+Excepción para PUSH/POP/JR:
+  WRITE_REG = 31 (SP) - Forzado directamente, no via MUX
+```
+
+#### MUX Writeback (8 entradas)
+**Selector**: `WB_SEL` [3 bits]
+```
+000 → WRITE_DATA = ALU_RESULT       - ADD, SUB, AND, OR, etc.
+001 → WRITE_DATA = MEMORY_DATA      - LW, POP
+010 → WRITE_DATA = HI_OUT           - MFHI
+011 → WRITE_DATA = LO_OUT           - MFLO
+100 → WRITE_DATA = PC_PLUS_4        - JAL (si existe)
+101 → WRITE_DATA = RND_VALUE        - RND
+110 → WRITE_DATA = KBD_VALUE        - KBD
+111 → WRITE_DATA = IMMEDIATE        - (Si necesario)
+```
+
 ## Conexión con Otros Componentes
 
 ### Con Control Unit

@@ -239,6 +239,107 @@ WRITE_DATA = HI_OUT (para MFHI) o LO_OUT (para MFLO)
 WRITE_REG = 3 (para MFHI) o 4 (para MFLO)
 ```
 
+## 🚨 IMPORTANTE: Modificación del Stack Pointer (R31/SP)
+
+### ❌ NO Existe Señal Especial SP_INCREMENT
+
+**CRÍTICO**: SP se modifica usando los **puertos normales** del Register File, NO mediante una señal especial.
+
+### ✅ Mecanismo REAL de Modificación de SP
+
+El Stack Pointer (R31) se trata como **cualquier otro registro** para escritura:
+
+#### Para PUSH Rs (Decrementar SP)
+```
+Fase EXECUTE:
+  READ_REG_1 = Rs              # Leer dato a guardar
+  READ_REG_2 = 31              # Leer SP actual
+
+  ALU:
+    Operando A = READ_DATA_2   # SP actual
+    Operando B = 4             # Constante
+    Operación = SUB            # SP - 4
+    RESULT = SP_nuevo
+
+  Register File (mismo ciclo):
+    WRITE_REG = 31             # Escribir a SP
+    WRITE_DATA = ALU_RESULT    # Nuevo SP = SP - 4
+    REG_WRITE = 1              # Habilitar escritura
+
+Siguiente ciclo:
+  Memory[SP_nuevo] = Rs        # Escribir dato a pila
+```
+
+**Configuración de señales**:
+```
+READ_REG_1 = Rs         # Leer dato a guardar
+READ_REG_2 = 31         # Leer SP actual
+ALU_OP = SUB            # Calcular SP - 4
+ALU_B = 4               # Constante 4
+WRITE_REG = 31          # Escribir a SP
+WRITE_DATA = ALU_RESULT # Nuevo SP = SP - 4
+REG_WRITE = 1           # Habilitar escritura
+```
+
+#### Para POP Rt (Incrementar SP)
+```
+Ciclo 1 - Leer dato de memoria:
+  READ_REG_2 = 31              # Leer SP
+  ADDRESS = READ_DATA_2        # Dirección = SP
+  Memory[SP] → dato            # Leer de memoria
+  WRITE_REG = Rt               # Preparar escritura a Rt
+  WRITE_DATA = MEMORY_DATA     # Dato leído
+
+Ciclo 2 - Actualizar SP:
+  READ_REG_2 = 31              # Leer SP otra vez
+
+  ALU:
+    Operando A = READ_DATA_2   # SP actual
+    Operando B = 4             # Constante
+    Operación = ADD            # SP + 4
+    RESULT = SP_nuevo
+
+  Register File:
+    WRITE_REG = 31             # Escribir a SP
+    WRITE_DATA = ALU_RESULT    # Nuevo SP = SP + 4
+    REG_WRITE = 1
+```
+
+#### Para JR Rs (Salto + Incrementar SP)
+```
+Fase EXECUTE:
+  READ_REG_1 = Rs              # Leer dirección de salto
+  READ_REG_2 = 31              # Leer SP simultáneamente
+
+  Branch Control:
+    PC_NEXT = READ_DATA_1      # Saltar a Rs
+
+  ALU:
+    Operando A = READ_DATA_2   # SP actual
+    Operando B = 4             # Constante
+    Operación = ADD            # SP + 4
+    RESULT = SP_nuevo
+
+  Register File:
+    WRITE_REG = 31             # Escribir a SP
+    WRITE_DATA = ALU_RESULT    # Nuevo SP = SP + 4
+    REG_WRITE = 1
+```
+
+### Clave del Diseño
+
+**NO existe señal especial como:**
+- ❌ `SP_INCREMENT`
+- ❌ `SP_DECREMENT`
+- ❌ `SP_WRITE`
+
+**Se usa:**
+- ✅ `WRITE_REG = 31` (puerto normal)
+- ✅ `WRITE_DATA = ALU_RESULT` (puerto normal)
+- ✅ `REG_WRITE = 1` (señal normal de escritura)
+
+**Ventaja**: No se necesita lógica especial en Register File para SP. Es solo otro registro que se escribe normalmente.
+
 ## Pseudocódigo Verilog
 
 ```verilog
