@@ -4,7 +4,7 @@
 **Estado**: 🟡 #implementado 
 **Ubicación**: `s-mips.circ` → CPU → Data Path
 **Complejidad**: ⭐⭐⭐⭐⭐ Muy Compleja (integra todos los componentes)
-**Prioridad**: 🟡 CASI COMPLETO (falta Random Generator)
+**Prioridad**: COMPLETO
 
 ## Descripción
 
