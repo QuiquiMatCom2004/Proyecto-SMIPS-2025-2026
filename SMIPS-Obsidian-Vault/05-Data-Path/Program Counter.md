@@ -38,12 +38,12 @@ El Program Counter (PC) es un registro de 32 bits que almacena la dirección de 
 
 ## Entradas
 
-| Puerto | Ancho | Descripción |
-|--------|-------|-------------|
-| `NEXT_PC` | 32 bits | Próximo valor del PC (desde [[Branch Control]]) |
-| `LOAD` | 1 bit | Habilita carga del nuevo PC |
-| `CLK` | 1 bit | Reloj del sistema |
-| `RESET` | 1 bit | Reset sincrónico a 0x00000000 |
+| Puerto | Ancho | Fuente | Descripción |
+|--------|-------|--------|-------------|
+| `PC_NEXT` | 32 bits | [[Branch Control]] | Próximo valor del PC |
+| `LOAD` | 1 bit | [[Control Unit]] | Habilita carga del nuevo PC |
+| `CLK` | 1 bit | Sistema | Reloj del sistema |
+| `RESET` | 1 bit | Sistema | Reset sincrónico a 0x00000000 |
 
 ## Salidas
 
@@ -61,7 +61,7 @@ always @(posedge CLK) begin
         PC_OUT <= 32'h00000000;  // Reset a dirección 0
     end
     else if (LOAD) begin
-        PC_OUT <= NEXT_PC;       // Cargar nuevo PC
+        PC_OUT <= PC_NEXT;       // Cargar nuevo PC
     end
     // else: mantener valor actual
 end
@@ -74,8 +74,8 @@ El PC se actualiza en diferentes momentos según el tipo de instrucción:
 **Instrucción Normal (sin branch)**:
 ```
 Ciclo N+2: EXECUTE completa
-         → Branch Control calcula NEXT_PC = PC + 4
-         → PC carga NEXT_PC
+         → Branch Control calcula PC_NEXT = PC + 4
+         → PC carga PC_NEXT
 Ciclo N+3: Nuevo PC disponible para fetch
 ```
 
@@ -84,8 +84,8 @@ Ciclo N+3: Nuevo PC disponible para fetch
 Ciclo N+2: EXECUTE completa
          → ALU calcula flags (ZERO, NEG)
          → Branch Control evalúa condición: TRUE
-         → Branch Control calcula NEXT_PC = PC + 4 + (offset × 4)
-         → PC carga NEXT_PC
+         → Branch Control calcula PC_NEXT = PC + 4 + (offset × 4)
+         → PC carga PC_NEXT
 Ciclo N+3: Nuevo PC (salto) disponible para fetch
 ```
 
@@ -93,8 +93,8 @@ Ciclo N+3: Nuevo PC (salto) disponible para fetch
 ```
 Ciclo N+2: EXECUTE completa
          → Branch Control extrae address[25:0]
-         → Branch Control calcula NEXT_PC = {PC[31:28], address, 2'b00}
-         → PC carga NEXT_PC
+         → Branch Control calcula PC_NEXT = {PC[31:28], address, 2'b00}
+         → PC carga PC_NEXT
 Ciclo N+3: Nuevo PC (salto) disponible para fetch
 ```
 
@@ -102,8 +102,8 @@ Ciclo N+3: Nuevo PC (salto) disponible para fetch
 ```
 Ciclo N+2: EXECUTE completa
          → Register File proporciona Rs_DATA
-         → Branch Control asigna NEXT_PC = Rs_DATA
-         → PC carga NEXT_PC
+         → Branch Control asigna PC_NEXT = Rs_DATA
+         → PC carga PC_NEXT
          → Register File actualiza SP = SP + 4
 Ciclo N+3: Nuevo PC (return address) disponible para fetch
 ```
@@ -147,7 +147,7 @@ LOAD:    ___________________───_________
 PC_OUT:  [0x00][0x00][0x00][0x00][0x04][0x04]
                                ↑ Cargado
 
-NEXT_PC: [?  ][?  ][?  ][0x04][0x04][?  ]
+PC_NEXT: [?  ][?  ][?  ][0x04][0x04][?  ]
                          ↑ Branch Ctl calcula
 ```
 

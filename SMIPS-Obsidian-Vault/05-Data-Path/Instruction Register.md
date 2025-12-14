@@ -47,9 +47,11 @@ El Instruction Register (IR) es un registro de 32 bits que almacena la instrucci
 
 ## Salidas
 
-| Porto | Ancho | Descripción |
-|--------|-------|-------------|
-| `INST_OUT` | 32 bits | Instrucción hacia [[Instruction Decoder]] |
+| Puerto | Ancho | Destino | Descripción |
+|--------|-------|---------|-------------|
+| `INSTRUCTION` | 32 bits | [[Instruction Decoder]] | Instrucción completa hacia decodificador |
+
+**Nota**: Internamente puede llamarse `INST_OUT`, pero la señal que llega al Instruction Decoder se llama `INSTRUCTION` para consistencia con la documentación del decoder.
 
 ## Comportamiento
 
@@ -58,10 +60,10 @@ El Instruction Register (IR) es un registro de 32 bits que almacena la instrucci
 ```verilog
 always @(posedge CLK) begin
     if (RESET) begin
-        INST_OUT <= 32'h00000000;  // NOP instruction
+        INSTRUCTION <= 32'h00000000;  // NOP instruction
     end
     else if (LOAD_I) begin
-        INST_OUT <= INST_IN;       // Cargar nueva instrucción
+        INSTRUCTION <= INST_IN;       // Cargar nueva instrucción
     end
     // else: mantener instrucción actual
 end
@@ -82,10 +84,10 @@ Ciclos 2-N: WAIT_INST_READ
 Ciclo N+1: LOAD_INST ⭐
          → Control Unit activa LOAD_I = 1
          → IR captura INST_IN
-         → Instrucción ahora disponible en INST_OUT
+         → Instrucción ahora disponible en INSTRUCTION
 
 Ciclo N+2: EXECUTE_INST
-         → Instruction Decoder lee INST_OUT
+         → Instruction Decoder lee INSTRUCTION
          → Data Path ejecuta
 ```
 
@@ -134,14 +136,14 @@ LOAD_I:    ________________________________________───___
 INST_IN:   [????][????][????][????][????][0x2001][0x2001][0x2001]
                                          ↑ Llegó de Memory Control
 
-INST_OUT:  [0x0000][0x0000][0x0000][0x0000][0x0000][0x0000][0x2001]
+INSTRUCTION: [0x0000][0x0000][0x0000][0x0000][0x0000][0x0000][0x2001]
                                                           ↑ Cargado
 ```
 
 **Explicación**:
 - Ciclos 1-4: Esperando que Memory Control lea instrucción
 - Ciclo 5 (LOAD): LOAD_I=1, IR captura 0x20010005 (ejemplo: ADDI R1, R0, 5)
-- Ciclo 6 (EXECUTE): Decoder lee INST_OUT = 0x20010005
+- Ciclo 6 (EXECUTE): Decoder lee INSTRUCTION = 0x20010005
 
 ### Instrucción que Permanece Durante Ejecución
 

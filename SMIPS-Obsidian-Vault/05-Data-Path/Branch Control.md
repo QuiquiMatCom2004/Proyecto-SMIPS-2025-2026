@@ -97,7 +97,11 @@ Incrementa Stack Pointer en 4 (retorno de función)
 | Puerto | Ancho | Destino | Descripción |
 |--------|-------|---------|-------------|
 | `PC_NEXT` | 32 bits | [[Program Counter]] | Siguiente valor de PC |
-| `SP_INCREMENT` | 1 bit | [[Register File]] | Señal para SP += 4 (JR) |
+
+**Nota sobre SP (Stack Pointer)**:
+Branch Control NO genera señal `SP_INCREMENT`. Para instrucciones que modifican SP (como JR), el Stack Pointer se actualiza usando los puertos normales del Register File:
+- JR: ALU calcula `SP + 4`, luego `WRITE_REG=31`, `WRITE_DATA=ALU_RESULT`, `REG_WRITE=1`
+- Ver [[Register File]] sección "Modificación del Stack Pointer" para detalles completos.
 
 ## Condiciones de Branch
 

@@ -42,8 +42,13 @@ La ALU actual en s-mips.circ implementa todas las operaciones requeridas:
 | `RESULT` | 32 bits | MUX Writeback | Resultado de operación |
 | `ZERO` | 1 bit | [[Branch Control]] | Flag: resultado == 0 |
 | `NEGATIVE` | 1 bit | [[Branch Control]] | Flag: resultado < 0 |
-| `HI` | 32 bits | [[Register File]] | Parte alta (mult/div) |
-| `LO` | 32 bits | [[Register File]] | Parte baja (mult/div) |
+| `HI` | 32 bits | [[Register File]] (`HI_IN`) | Parte alta (mult/div) |
+| `LO` | 32 bits | [[Register File]] (`LO_IN`) | Parte baja (mult/div) |
+
+**Nota sobre nombres de señales**:
+- ALU genera señales llamadas `HI` y `LO`
+- Register File las recibe como `HI_IN` y `LO_IN` (nombre del puerto de entrada)
+- Son la misma conexión física con nombres diferentes en cada componente
 
 ## Operaciones Soportadas
 
