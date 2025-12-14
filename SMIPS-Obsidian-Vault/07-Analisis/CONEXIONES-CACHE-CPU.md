@@ -112,10 +112,10 @@ El Vault dice que no existen, pero **sí están en el circuito**.
 
 #### Salidas (hacia Data Path / Control Unit)
 
-| Señal | Ancho | Hacia | Descripción |
-|-------|-------|-------|-------------|
-| `DATA_READ` | 32 bits | MUX Writeback (Data Path) | Dato leído (LW) |
-| `D_CACHE_READY` | 1 bit | Control Unit | Operación completada |
+| Señal           | Ancho   | Hacia                     | Descripción          |     |
+| --------------- | ------- | ------------------------- | -------------------- | --- |
+| `DATA_READ`     | 32 bits | MUX Writeback (Data Path) | Dato leído (LW)      |     |
+| `D_CACHE_READY` | 1 bit   | Control Unit              | Operación completada |     |
 
 #### Conexión con Memory Control
 
