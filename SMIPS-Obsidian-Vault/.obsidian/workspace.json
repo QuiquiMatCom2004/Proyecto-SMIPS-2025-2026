@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "07-Analisis/DIAGRAMA-CONEXIONES-LOGISIM.md",
+                "file": "Correcciones de Conectividad - S-MIPS Processor.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "DIAGRAMA-CONEXIONES-LOGISIM"
+              "title": "Correcciones de Conectividad - S-MIPS Processor"
             }
           }
         ]
@@ -182,8 +182,11 @@
   },
   "active": "a88d8409a6c41452",
   "lastOpenFiles": [
-    "07-Analisis/DIAGNOSTICO-ALTA-IMPEDANCIA.md",
+    "Untitled.md",
+    "Correcciones de Conectividad - S-MIPS Processor.md",
+    "S-mips conexiones.md",
     "07-Analisis/DIAGRAMA-CONEXIONES-LOGISIM.md",
+    "07-Analisis/DIAGNOSTICO-ALTA-IMPEDANCIA.md",
     "07-Analisis/GUIA-CONEXION-CACHES.md",
     "07-Analisis/DISPARIDADES-VAULT-VS-SPEC.md",
     "07-Analisis/SIMULACION-SORT3-PASO-A-PASO.md",
@@ -205,9 +208,6 @@
     "05-Data-Path/Program Counter.md",
     "05-Data-Path/Random Generator.md",
     "05-Data-Path/Register File.md",
-    "01-Arquitectura/S-MIPS Complete Architecture.md",
-    "04-Memory-Control/Address Translator.md",
-    "04-Memory-Control/Little-Endian Converter.md",
     "Untitled 1.canvas",
     "Untitled.canvas",
     "Dashboard.md.tmp.61154.1765317380137",
