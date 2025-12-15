@@ -191,13 +191,13 @@ stateDiagram-v2
 | `RESET` | 1 bit | Reset sincrónico |
 
 ### Desde [[Data Path]]
-| Puerto        | Ancho | Descripción                               |
-| ------------- | ----- | ----------------------------------------- |
-| [[HALT]]      | 1 bit | Señal de instrucción HALT                 |
-| [[MC_NEEDED]] | 1 bit | Indica que se necesita acceso a memoria (LW/SW/PUSH/POP)   |
-| [[IS_WRITE]]  | 1 bit | Tipo de acceso: 0=lectura (LW/POP), 1=escritura (SW/PUSH)    |
-| `PUSH`        | 1 bit | Señal de instrucción PUSH (para 2º ciclo de stack) |
-| `POP`         | 1 bit | Señal de instrucción POP (para 2º ciclo de stack)  |
+| Puerto        | Ancho | Descripción                                               |
+| ------------- | ----- | --------------------------------------------------------- |
+| [[HALT]]      | 1 bit | Señal de instrucción HALT                                 |
+| [[MC_NEEDED]] | 1 bit | Indica que se necesita acceso a memoria (LW/SW/PUSH/POP)  |
+| [[IS_WRITE]]  | 1 bit | Tipo de acceso: 0=lectura (LW/POP), 1=escritura (SW/PUSH) |
+| `PUSH`        | 1 bit | Señal de instrucción PUSH (para 2º ciclo de stack)        |
+| `POP`         | 1 bit | Señal de instrucción POP (para 2º ciclo de stack)         |
 
 **Nota**: Estas señales son generadas por el [[Instruction Decoder]] dentro del Data Path y expuestas como salidas del Data Path hacia Control Unit.
 
