@@ -12,7 +12,8 @@ El Data Path es el componente central que integra todos los elementos de procesa
 
 ## Estado de Implementación
 
-**🟡 90% IMPLEMENTADO**
+**COMPLETO**
+
 
 ### ✅ Componentes Implementados (11/11)
 
@@ -106,41 +107,86 @@ El Data Path es el componente central que integra todos los elementos de procesa
 
 ### Entradas desde Control Unit
 
-| Puerto | Ancho | Descripción |
-|--------|-------|-------------|
-| `LOAD_INST` | 1 bit | Cargar instrucción en IR |
-| `REG_WRITE` | 1 bit | Enable escritura en Register File |
-| `MEM_TO_REG` | 1 bit | Seleccionar dato de memoria para writeback |
-| `ALU_SRC` | 1 bit | Seleccionar Rt o Immediate para ALU |
-| `REG_DST` | 1 bit | Seleccionar Rd o Rt como destino |
-| `BRANCH` | 1 bit | Instrucción es branch |
-| `JUMP` | 1 bit | Instrucción es jump |
-| `CLK` | 1 bit | Reloj del sistema |
-| `RESET` | 1 bit | Reset del sistema |
+| Puerto      | Ancho | Descripción                                                     |
+| ----------- | ----- | --------------------------------------------------------------- |
+| `LOAD_INST` | 1 bit | Cargar instrucción en IR (Control Unit lo genera como `LOAD_I`) |
+| `EN`        | 1 bit | Data Path Enable (habilitar procesamiento)                      |
+| `CLK`       | 1 bit | Reloj del sistema global (NO `CLK_DP` - mismo reloj para todos) |
+| `RESET`     | 1 bit | Reset sincrónico del sistema                                    |
+
+**Nota de nomenclatura**: Data Path recibe `LOAD_INST`, pero Control Unit lo genera como `LOAD_I`. Son el mismo pin físico con diferente nombre por claridad en documentación.
+
+**⚠️ IMPORTANTE - Señales de Control INTERNAS**:
+
+Las siguientes señales **NO son entradas externas**, sino que son generadas **INTERNAMENTE** por el [[Instruction Decoder]] dentro del Data Path:
+
+- `REG_WRITE` - Enable escritura en Register File
+- `MEM_TO_REG` - Seleccionar dato de memoria para writeback
+- `ALU_SRC` - Seleccionar Rt o Immediate para ALU
+- `REG_DST` - Seleccionar Rd o Rt como destino
+- `BRANCH` - Instrucción es branch
+- `JUMP` - Instrucción es jump
+- `ALU_OP` - Operación de ALU
+- `WB_SEL` - Selector de writeback
+
+Ver sección "Señales de Control Internas" más abajo para detalles.
 
 ### Entradas desde Memory Control
 
 | Puerto | Ancho | Descripción |
 |--------|-------|-------------|
-| `INSTRUCTION_IN` | 32 bits | Instrucción leída de memoria |
-| `MEMORY_DATA` | 32 bits | Dato leído de memoria (LW) |
+| `DATA_READ` | 32 bits | Dato leído de memoria (instrucción en fetch, o dato en LW/POP) |
+
+**Nota sobre DATA_READ**:
+- Memory Control envía `DATA_READ` que contiene:
+  - **Instrucción** cuando se hace fetch → cargada en Instruction Register
+  - **Dato** cuando se hace LW/POP → enviado a Register File vía MUX Writeback
+- Data Path internamente separa estos dos usos:
+  - `INSTRUCTION_IN` = `DATA_READ` cuando LOAD_INST=1
+  - `MEMORY_DATA` = `DATA_READ` cuando operación es LW/POP
+
+**Alternativa**: Memory Control puede tener dos salidas separadas:
+- `INSTRUCTION_OUT` (32 bits) - Solo para fetch
+- `DATA_OUT` (32 bits) - Solo para LW/POP
+
+Pero esto duplica conexiones. **Recomendado**: Usar un solo `DATA_READ` y multiplexar en Data Path según contexto.
 
 ### Salidas a Control Unit
 
 | Puerto | Ancho | Descripción |
 |--------|-------|-------------|
-| `OPCODE` | 6 bits | Opcode de instrucción actual |
-| `FUNCT` | 6 bits | Function code (R-type) |
-| `ZERO` | 1 bit | Flag: resultado ALU = 0 |
-| `NEGATIVE` | 1 bit | Flag: resultado ALU < 0 |
+| `HALT` | 1 bit | Señal de instrucción HALT detectada |
+| `MC_NEEDED` | 1 bit | Requiere acceso a memoria (LW/SW/PUSH/POP) |
+| `IS_WRITE` | 1 bit | Tipo de acceso a memoria: 0=lectura (LW/POP), 1=escritura (SW/PUSH) |
+| `PUSH` | 1 bit | Instrucción PUSH detectada (para 2º ciclo de stack) |
+| `POP` | 1 bit | Instrucción POP detectada (para 2º ciclo de stack) |
+
+**Nota**: Todas estas señales son generadas por el [[Instruction Decoder]] dentro del Data Path y expuestas como salidas hacia [[Control Unit]] para coordinación de la FSM.
+
+**⚠️ Señales que NO son salidas externas**:
+
+Las siguientes señales son **INTERNAS** del Data Path y **NO salen** a Control Unit:
+
+- ❌ `OPCODE` (6 bits) - Campo de instrucción, usado internamente por Instruction Decoder
+- ❌ `FUNCT` (6 bits) - Campo de instrucción, usado internamente por Instruction Decoder
+- ❌ `ZERO` (1 bit) - Flag de ALU, usado internamente por Branch Control
+- ❌ `NEGATIVE` (1 bit) - Flag de ALU, usado internamente por Branch Control
+
+Estas señales permanecen dentro del Data Path para control interno.
 
 ### Salidas a Memory Control
 
 | Puerto | Ancho | Descripción |
 |--------|-------|-------------|
-| `ADDRESS` | 32 bits | Dirección de memoria (LW/SW) |
-| `WRITE_DATA` | 32 bits | Dato a escribir (SW) |
-| `PC_OUT` | 32 bits | Program Counter para fetch |
+| `MEM_ADDRESS` | 32 bits | Dirección efectiva de memoria para LW/SW/PUSH/POP (ALU result: base + offset) |
+| `DATA_WRITE` | 32 bits | Dato a escribir en memoria (SW/PUSH) |
+| `PC` | 32 bits | Program Counter para fetch de instrucciones |
+
+**Nota de nomenclatura unificada con Memory Control**:
+- Data Path genera `PC` y `MEM_ADDRESS` como señales separadas
+- Memory Control recibe `PC` (fetch) y `MEM_ADDRESS` (LW/SW) según Opción A (recomendada)
+- Alternativamente, Data Path puede multiplexar internamente y enviar solo `ADDRESS`
+- `DATA_WRITE` coincide con `DATA_WRITE` de Memory Control (mismo nombre)
 
 ## Subcomponentes Detallados
 
@@ -186,19 +232,43 @@ wire [15:0] immediate = INSTRUCTION[15:0];
 wire [25:0] address   = INSTRUCTION[25:0];
 ```
 
-**Generación de señales**:
-- `ALU_OP`: Operación de ALU (4-6 bits)
-- `REG_WRITE`: Escribir registro
-- `MEM_READ`: Leer memoria
-- `MEM_WRITE`: Escribir memoria
-- `BRANCH`: Es branch
-- `JUMP`: Es jump
-- `ALU_SRC`: Usar immediate
-- `REG_DST`: Destino Rd o Rt
+**Generación de señales de control INTERNAS**:
+
+El Instruction Decoder genera **TODAS** las señales de control de bajo nivel que coordinan los componentes internos del Data Path. Estas señales **NO salen** del Data Path hacia Control Unit.
+
+#### Señales de Control del Register File:
+- `REG_WRITE` (1 bit) - Enable escritura en Register File
+- `REG_DST` (1 bit) - Seleccionar destino: 0=Rt, 1=Rd
+- `READ_REG_1` (5 bits) - Dirección de Rs
+- `READ_REG_2` (5 bits) - Dirección de Rt
+
+#### Señales de Control de ALU:
+- `ALU_OP` (4-6 bits) - Operación de ALU (ADD, SUB, AND, OR, etc.)
+- `ALU_SRC` (1 bit) - Operando B: 0=Rt, 1=Immediate
+
+#### Señales de Control de Branch:
+- `BRANCH` (1 bit) - Instrucción es branch
+- `BRANCH_TYPE` (3 bits) - Tipo: BEQ, BNE, BLEZ, BGTZ, BLTZ
+- `JUMP` (1 bit) - Instrucción es jump
+- `JUMP_REG` (1 bit) - Jump register (JR)
+
+#### Señales de Control de Writeback:
+- `MEM_TO_REG` (1 bit) - Fuente: 0=ALU, 1=Memoria
+- `WB_SEL` (3 bits) - Selector MUX Writeback (ALU/MEM/HI/LO/RND/KBD)
+
+#### Señales hacia Control Unit (Feedback):
+Estas SÍ salen del Data Path:
+- `HALT` (1 bit) - Instrucción HALT detectada
+- `MC_NEEDED` (1 bit) - Necesita acceso a memoria
+- `IS_WRITE` (1 bit) - Tipo de operación memoria
+- `PUSH` (1 bit) - Instrucción PUSH (para FSM)
+- `POP` (1 bit) - Instrucción POP (para FSM)
 
 **Estado**: ✅ IMPLEMENTADO (40+ instrucciones)
 
 **Archivo detallado**: [[Instruction Decoder]]
+
+**⚠️ Arquitectura**: El Instruction Decoder usa arquitectura **hardwired control** (control cableado), donde cada instrucción tiene su lógica de decodificación específica, a diferencia de arquitectura microcodificada donde Control Unit tendría ROM de microinstrucciones.
 
 ---
 
@@ -347,7 +417,7 @@ REG_DST = 1 → WRITE_REG = Rd (R-type: ADD, SUB, etc.)
 3. `HI_OUT` - Registro Hi (MFHI)
 4. `LO_OUT` - Registro Lo (MFLO)
 5. `PC_PLUS_4` - PC+4 (para JAL/JALR si existieran)
-6. `RND_VALUE` - Número aleatorio (RND) 🔴
+6. `RANDOM_VALUE` - Número aleatorio del [[Random Generator]] (RND)
 7. `KBD_VALUE` - Input de teclado (KBD)
 8. `IMMEDIATE` - Immediate directo (si necesario)
 
@@ -359,13 +429,15 @@ case (WB_SEL)
     3'b010: WRITE_DATA = HI_OUT;
     3'b011: WRITE_DATA = LO_OUT;
     3'b100: WRITE_DATA = PC_PLUS_4;
-    3'b101: WRITE_DATA = RND_VALUE;
+    3'b101: WRITE_DATA = RANDOM_VALUE;  // Corrección: era RND_VALUE
     3'b110: WRITE_DATA = KBD_VALUE;
     3'b111: WRITE_DATA = IMMEDIATE;
 endcase
 ```
 
-**Estado**: ✅ IMPLEMENTADO (excepto RND_VALUE)
+**Estado**: ✅ IMPLEMENTADO (excepto RANDOM_VALUE del Random Generator)
+
+**Nota**: La entrada correcta es `RANDOM_VALUE` (no `RND_VALUE`). Debe coincidir con la salida del [[Random Generator]].
 
 **Archivo detallado**: [[MUX Writeback]]
 
@@ -583,13 +655,13 @@ ZeroExt   = 0x0000FFFF (65535 unsigned)
 
 ```
 1. Random Generator: 🔴 FALTANTE
-   - RND_VALUE = LFSR output
+   - RANDOM_VALUE = LFSR output
 
 2. MUX Writeback:
-   - WRITE_DATA = RND_VALUE
+   - WRITE_DATA = RANDOM_VALUE
 
 3. Register File:
-   - R5 = RND_VALUE
+   - R5 = RANDOM_VALUE
 ```
 
 ---
@@ -604,10 +676,12 @@ ZeroExt   = 0x0000FFFF (65535 unsigned)
 ### De Control Unit → Data Path
 | Señal | Ancho | Descripción |
 |-------|-------|-------------|
-| `LOAD_I` | 1 bit | Cargar instrucción en Instruction Register |
-| `EN` | 1 bit | Data Path Enable (habilitar ejecución) |
-| `CLK_DP` | 1 bit | Clock del Data Path |
-| `CLR` | 1 bit | Clear/Reset global del Data Path |
+| `LOAD_I` | 1 bit | Cargar instrucción en Instruction Register (Data Path lo recibe como `LOAD_INST`) |
+| `EN` | 1 bit | Data Path Enable (habilitar procesamiento) |
+| `CLK` | 1 bit | Clock global del sistema (NO `CLK_DP` - todos los componentes usan el mismo reloj) |
+| `RESET` | 1 bit | Reset sincrónico global del Data Path |
+
+**Total: 4 señales (2 de control + 2 globales)**
 
 ### De Instruction Register → Instruction Decoder
 | Señal | Ancho | Descripción |
@@ -659,8 +733,18 @@ ZeroExt   = 0x0000FFFF (65535 unsigned)
 ### De Data Path → Control Unit
 | Señal | Ancho | Descripción |
 |-------|-------|-------------|
-| `HALT` | 1 bit | Señal de instrucción HALT |
+| `HALT` | 1 bit | Señal de instrucción HALT detectada |
 | `MC_NEEDED` | 1 bit | Indica si necesita acceso a memoria (LW/SW/PUSH/POP) |
+| `IS_WRITE` | 1 bit | Tipo de acceso: 0=lectura (LW/POP), 1=escritura (SW/PUSH) |
+| `PUSH` | 1 bit | Instrucción PUSH detectada (para 2º ciclo de stack) |
+| `POP` | 1 bit | Instrucción POP detectada (para 2º ciclo de stack) |
+
+**Total: 5 señales de feedback**
+
+**⚠️ Señales internas que NO salen**:
+- `OPCODE`, `FUNCT` - Campos de instrucción (internos)
+- `ZERO`, `NEGATIVE` - Flags de ALU (internos, usados por Branch Control)
+- `REG_WRITE`, `MEM_TO_REG`, `ALU_SRC`, `REG_DST`, `BRANCH`, `JUMP`, `ALU_OP`, `WB_SEL` - Señales de control generadas por Instruction Decoder (internas)
 
 ### Multiplexores Internos Detallados
 
@@ -689,7 +773,7 @@ Excepción para PUSH/POP/JR:
 010 → WRITE_DATA = HI_OUT           - MFHI
 011 → WRITE_DATA = LO_OUT           - MFLO
 100 → WRITE_DATA = PC_PLUS_4        - JAL (si existe)
-101 → WRITE_DATA = RND_VALUE        - RND
+101 → WRITE_DATA = RANDOM_VALUE     - RND (del Random Generator)
 110 → WRITE_DATA = KBD_VALUE        - KBD
 111 → WRITE_DATA = IMMEDIATE        - (Si necesario)
 ```

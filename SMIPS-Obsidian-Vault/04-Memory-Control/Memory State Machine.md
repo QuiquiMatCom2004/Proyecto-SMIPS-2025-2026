@@ -114,7 +114,16 @@ stateDiagram-v2
 | `MC_END` | 1 bit | Operación completada (a [[Control Unit]]) |
 | `CS` | 1 bit | Chip Select para RAM |
 | `R/W_RAM` | 1 bit | Control R/W para RAM |
-| `CAPTURE_DATA` | 1 bit | Señal para capturar O0-O3 (lectura) |
+
+**⚠️ IMPORTANTE: CAPTURE_DATA FUE ELIMINADO**
+
+La señal `CAPTURE_DATA` fue eliminada de la especificación porque es innecesaria.
+
+### Justificación
+
+En Logisim, los registros capturan datos automáticamente en el flanco de reloj cuando están habilitados. La captura de datos de O0-O3 ocurre implícitamente en el estado COMPLETE sin necesidad de una señal especial de captura.
+
+El dato simplemente se lee de las salidas O0-O3 de la RAM y se procesa a través del [[Word Selector]] y [[Little-Endian Converter]] cuando `MC_END=1`.
 
 ## Pseudocódigo Verilog
 
@@ -128,8 +137,8 @@ module memory_state_machine (
     input wire [3:0] WT,         // Write time from RAM
     output reg MC_END,
     output reg CS,
-    output reg R_W_RAM,
-    output reg CAPTURE_DATA
+    output reg R_W_RAM
+    // NOTA: CAPTURE_DATA fue eliminado - es innecesario en Logisim
 );
 
 // Estados
@@ -215,7 +224,6 @@ always @(*) begin
     MC_END = 1'b0;
     CS = 1'b0;
     R_W_RAM = 1'b0;
-    CAPTURE_DATA = 1'b0;
 
     case (current_state)
         IDLE: begin
@@ -241,9 +249,8 @@ always @(*) begin
         COMPLETE: begin
             MC_END = 1'b1;
             CS = 1'b0;
-            // Si fue lectura, señalizar captura de datos
-            if (operation_type == 1'b0)
-                CAPTURE_DATA = 1'b1;
+            // Nota: CAPTURE_DATA eliminado
+            // Los datos de O0-O3 se leen directamente cuando MC_END=1
         end
     endcase
 end
@@ -273,9 +280,7 @@ Counter:    [0][0][0][0][1][2][3][3][0]
                         └─ Incrementa cada ciclo
 
 MC_END:     ____________________________________________───___
-
-CAPTURE:    ____________________________________________───___
-                                                        ↑ Capturar O0-O3
+                                                        ↑ Datos O0-O3 disponibles
 ```
 
 ### Operación de Escritura (WT=2 cycles)

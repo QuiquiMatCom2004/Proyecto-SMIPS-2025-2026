@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Correcciones de Conectividad - S-MIPS Processor.md",
+                "file": "05-Data-Path/Data Path.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Correcciones de Conectividad - S-MIPS Processor"
+              "title": "Data Path"
             }
           }
         ]
@@ -44,7 +44,7 @@
                 "autoReveal": false
               },
               "icon": "lucide-folder-closed",
-              "title": "Files"
+              "title": "Explorador de archivos"
             }
           },
           {
@@ -171,54 +171,54 @@
   },
   "left-ribbon": {
     "hiddenItems": {
-      "switcher:Open quick switcher": false,
-      "graph:Open graph view": false,
-      "canvas:Create new canvas": false,
-      "daily-notes:Open today's daily note": false,
-      "templates:Insert template": false,
-      "command-palette:Open command palette": false,
-      "bases:Create new base": false
+      "switcher:Abrir selector rápido": false,
+      "graph:Abrir vista gráfica": false,
+      "canvas:Crear nuevo lienzo": false,
+      "daily-notes:Abrir la nota de hoy": false,
+      "templates:Insertar plantilla": false,
+      "command-palette:Abrir paleta de comandos": false,
+      "bases:Crear nueva base": false
     }
   },
   "active": "a88d8409a6c41452",
   "lastOpenFiles": [
+    "03-Control-Unit/Control Unit.md",
+    "07-Analisis/CORRECCION-FSM-DIRECT-MAPPED-CACHE.md",
+    "07-Analisis/CORRECCION-FSM-DIRECT-MAPPED-CACHE.md.tmp.2886.1765748954558",
+    "03-Control-Unit/Control Unit.md.tmp.2886.1765748857924",
+    "03-Control-Unit/Control Unit.md.tmp.2886.1765748847203",
+    "03-Control-Unit/Control Unit.md.tmp.2886.1765748836112",
+    "03-Control-Unit/Control Unit.md.tmp.2886.1765748815564",
+    "03-Control-Unit/Control Unit.md.tmp.2886.1765748797872",
+    "03-Control-Unit/Control Unit.md.tmp.2886.1765748778082",
+    "03-Control-Unit/Control Unit.md.tmp.2886.1765748766664",
+    "03-Control-Unit/Control Unit.md.tmp.2886.1765748754640",
+    "03-Control-Unit/Control Unit.md.tmp.2886.1765748738960",
+    "06-Cache/Cache System Overview.md",
+    "07-Analisis/ACTUALIZACION-FSM-CONTROL-UNIT.md",
+    "07-Analisis/CAMBIOS-FSM-CONTROL-UNIT-PARA-CACHES.md",
+    "06-Cache/Instruction Cache.md",
+    "06-Cache/Data Cache.md",
+    "05-Data-Path/Register File.md",
+    "05-Data-Path/Random Generator.md",
+    "05-Data-Path/Program Counter.md",
+    "05-Data-Path/Instruction Decoder.md",
+    "05-Data-Path/Instruction Register.md",
+    "05-Data-Path/Data Path.md",
+    "04-Memory-Control/Memory Control.md",
+    "04-Memory-Control/Word Selector.md",
+    "04-Memory-Control/Memory State Machine.md",
+    "05-Data-Path/Branch Control.md",
+    "05-Data-Path/ALU.md",
+    "07-Analisis/RESUMEN-CORRECCIONES-APLICADAS.md",
+    "07-Analisis/RESUMEN-CORRECCIONES-ARQUITECTURA.md",
+    "07-Analisis/ANALISIS-CRITICO-PINES-Y-RESPONSABILIDADES.md",
     "Untitled.md",
     "Correcciones de Conectividad - S-MIPS Processor.md",
     "S-mips conexiones.md",
     "07-Analisis/DIAGRAMA-CONEXIONES-LOGISIM.md",
     "07-Analisis/DIAGNOSTICO-ALTA-IMPEDANCIA.md",
-    "07-Analisis/GUIA-CONEXION-CACHES.md",
-    "07-Analisis/DISPARIDADES-VAULT-VS-SPEC.md",
-    "07-Analisis/SIMULACION-SORT3-PASO-A-PASO.md",
-    "07-Analisis/INCONSISTENCIAS-VAULT-COMPLETO.md",
-    "07-Analisis/REPORTE-ESTADO-REAL-CIRCUITO.md",
-    "07-Analisis/RESUMEN-PROBLEMA-ALTA-IMPEDANCIA.md",
-    "07-Analisis/CONEXIONES-CACHE-CPU.md",
-    "07-Analisis/CORRECCIONES-CRITICAS-VAULT.md",
-    "05-Data-Path/Data Path.md",
-    "03-Control-Unit/Control Unit.md",
-    "06-Cache/Data Cache.md",
-    "05-Data-Path/Branch Control.md",
-    "07-Analisis/CORRECCIONES-VAULT-APLICADAS.md",
-    "06-Cache/Instruction Cache.md",
-    "06-Cache/Direct-Mapped Cache Implementation.md",
-    "06-Cache/Cache System Overview.md",
-    "05-Data-Path/Instruction Decoder.md",
-    "05-Data-Path/ALU.md",
-    "05-Data-Path/Program Counter.md",
-    "05-Data-Path/Random Generator.md",
-    "05-Data-Path/Register File.md",
     "Untitled 1.canvas",
-    "Untitled.canvas",
-    "Dashboard.md.tmp.61154.1765317380137",
-    "Dashboard.md.tmp.61154.1765317367520",
-    "RESUMEN-FINAL-VAULT.md.tmp.61154.1765317345038",
-    "RESUMEN-FINAL-VAULT.md.tmp.61154.1765316871472",
-    "GUIA-INTEGRACION-PRACTICA.md.tmp.61154.1765316871161",
-    "06-Cache/Direct-Mapped Cache Implementation.md.tmp.61154.1765316640635",
-    "04-Memory-Control/MASK Generator.md.tmp.61154.1765316519633",
-    "04-Memory-Control/Word Selector.md.tmp.61154.1765316424520",
-    "COMPONENTES-FALTANTES-COMPLETO.md.tmp.61154.1765316042193",
-    "04-Memory-Control/Address Translator.md.tmp.43498.1765302857998"
+    "Untitled.canvas"
   ]
 }

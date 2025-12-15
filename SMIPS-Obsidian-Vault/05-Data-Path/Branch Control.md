@@ -98,10 +98,40 @@ Incrementa Stack Pointer en 4 (retorno de función)
 |--------|-------|---------|-------------|
 | `PC_NEXT` | 32 bits | [[Program Counter]] | Siguiente valor de PC |
 
-**Nota sobre SP (Stack Pointer)**:
-Branch Control NO genera señal `SP_INCREMENT`. Para instrucciones que modifican SP (como JR), el Stack Pointer se actualiza usando los puertos normales del Register File:
-- JR: ALU calcula `SP + 4`, luego `WRITE_REG=31`, `WRITE_DATA=ALU_RESULT`, `REG_WRITE=1`
-- Ver [[Register File]] sección "Modificación del Stack Pointer" para detalles completos.
+**⚠️ IMPORTANTE: SP_INCREMENT NO EXISTE**
+
+Branch Control **NO genera** señal `SP_INCREMENT`. Este pin fue eliminado de la especificación porque es innecesario.
+
+### Modificación del Stack Pointer (SP = R31)
+
+Para instrucciones que modifican el Stack Pointer (JR, PUSH, POP), el SP se actualiza usando los **puertos normales** del [[Register File]]:
+
+**Para JR (Jump Register)**:
+1. ALU calcula: `SP_NEW = SP + 4`
+2. Register File recibe:
+   - `WRITE_REG = 31` (dirección de SP)
+   - `WRITE_DATA = SP_NEW` (del ALU)
+   - `REG_WRITE = 1`
+3. En el próximo ciclo, R31 contiene SP + 4
+
+**Para PUSH Rs**:
+1. ALU calcula: `SP_NEW = SP - 4`
+2. Register File recibe:
+   - `WRITE_REG = 31`
+   - `WRITE_DATA = SP_NEW`
+   - `REG_WRITE = 1`
+3. Luego, Memory Control escribe Rs en dirección SP_NEW
+
+**Para POP Rd**:
+1. Memory Control lee dato de dirección SP
+2. ALU calcula: `SP_NEW = SP + 4`
+3. Register File recibe:
+   - `WRITE_REG = 31`
+   - `WRITE_DATA = SP_NEW`
+   - `REG_WRITE = 1`
+4. También, dato leído se escribe en Rd
+
+Ver [[Register File]] sección "Modificación del Stack Pointer" para detalles completos de implementación.
 
 ## Condiciones de Branch
 
@@ -308,8 +338,9 @@ assign PC_NEXT = JUMP_REG ? JR_TARGET :
                  BRANCH_TAKEN ? BRANCH_TARGET :
                  PC_PLUS_4;
 
-// SP increment solo para JR
-assign SP_INCREMENT = JUMP_REG;
+// NOTA: SP_INCREMENT fue eliminado.
+// El Stack Pointer se modifica usando puertos normales del Register File.
+// Ver documentación de Register File para detalles.
 
 endmodule
 ```

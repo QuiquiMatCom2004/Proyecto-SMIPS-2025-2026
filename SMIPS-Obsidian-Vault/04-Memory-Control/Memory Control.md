@@ -73,10 +73,34 @@ Memory Control es el controlador que maneja toda la comunicación con la RAM as�
 | `RESET` | 1 bit | Reset sincrónico |
 
 ### Desde [[Data Path]] o [[Cache System]]
-| Puerto | Ancho | Descripción |
-|--------|-------|-------------|
-| `ADDRESS` | 32 bits | Dirección de byte (debe ser múltiplo de 4) |
-| `DATA_WRITE` | 32 bits | Dato a escribir (para SW/PUSH) |
+
+**Opción A (Recomendada): Dos pines separados**
+
+| Puerto | Ancho | Fuente | Descripción |
+|--------|-------|---------|-------------|
+| `PC` | 32 bits | [[Program Counter]] | Dirección para fetch de instrucciones |
+| `MEM_ADDRESS` | 32 bits | ALU Result | Dirección efectiva para LW/SW/PUSH/POP (base + offset) |
+| `DATA_WRITE` | 32 bits | [[Register File]] READ_DATA_2 | Dato a escribir (para SW/PUSH) |
+
+**MUX interno en Memory Control**: Selecciona entre PC (si fetch) o MEM_ADDRESS (si LW/SW)
+```verilog
+wire [31:0] final_address;
+assign final_address = is_fetch ? PC : MEM_ADDRESS;
+```
+
+**Opción B (Alternativa): Un solo ADDRESS con control**
+
+| Puerto | Ancho | Fuente | Descripción |
+|--------|-------|---------|-------------|
+| `ADDRESS` | 32 bits | [[Data Path]] | PC (si fetch) o ALU Result (si LW/SW) - multiplexado en Data Path |
+| `DATA_WRITE` | 32 bits | [[Register File]] READ_DATA_2 | Dato a escribir |
+
+Donde Data Path usa un MUX para seleccionar:
+```verilog
+assign ADDRESS = (state == FETCH) ? PC : ALU_RESULT;
+```
+
+**Recomendación**: Usar **Opción A** (dos pines) para mayor claridad y separación de concerns.
 
 ### Desde [[RAM Module]]
 | Puerto | Ancho | Descripción |
@@ -344,19 +368,21 @@ Ciclo M+3: MC_END=1
 Ciclo M+4: Estado: IDLE
 ```
 
-## Integración con Cache
+## Integración con Cache (Sistema de Bypass)
+
+Memory Control debe ser **agnóstico** a si hay cachés o no. Las cachés se comportan como capas opcionales.
 
 ### Operación sin Caché (modo bypass)
 ```
-CPU → Memory Control → RAM
+CPU/Control Unit → Memory Control → RAM
 ```
-Memory Control accede directamente a RAM.
+Memory Control accede directamente a RAM. Sistema funciona normalmente.
 
 ### Operación con Caché
 ```
-CPU → Cache → Memory Control → RAM
-            ↓ (on hit)
-            CPU
+CPU → I-Cache/D-Cache → Memory Control → RAM
+                ↓ (on hit)
+              CPU
 ```
 
 **Cache miss**:
@@ -367,9 +393,61 @@ CPU → Cache → Memory Control → RAM
 5. Cache devuelve palabra solicitada a CPU
 
 **Cache hit**:
-- Cache devuelve dato directamente, Memory Control no se usa
+- Cache devuelve dato directamente en 1 ciclo
+- Memory Control no se usa
 
-Ver: [[Cache System Overview]] para integración completa.
+### Multiplexado de Requests (Instrucción vs Datos)
+
+Cuando hay cachés, Memory Control debe arbitrar entre requests de [[Instruction Cache]] y [[Data Cache]]:
+
+**Interfaz actualizada (con cachés)**:
+
+#### Entradas (multiplexadas)
+| Puerto | Ancho | Fuente | Descripción |
+|--------|-------|---------|-------------|
+| `MC_START_I` | 1 bit | Instruction Cache | Request de I-Cache (on miss) |
+| `MC_START_D` | 1 bit | Data Cache | Request de D-Cache (on miss) |
+| `MC_ADDRESS_I` | 32 bits | I-Cache | Dirección de bloque (instrucciones) |
+| `MC_ADDRESS_D` | 32 bits | D-Cache | Dirección de bloque (datos) |
+| `MC_RW_D` | 1 bit | D-Cache | Read/Write (0=read, 1=write) |
+| `MC_DATA_WRITE_D` | 32 bits | D-Cache | Dato a escribir (write-through) |
+
+#### Salidas (compartidas)
+| Puerto | Ancho | Destino | Descripción |
+|--------|-------|---------|-------------|
+| `MC_BLOCK_DATA` | 128 bits | Ambas cachés | Bloque de 4 palabras leído de RAM |
+| `MC_END_I` | 1 bit | Instruction Cache | Operación I-Cache completada |
+| `MC_END_D` | 1 bit | Data Cache | Operación D-Cache completada |
+
+#### Lógica de Arbitraje (Prioridad Fija)
+```verilog
+// Prioridad: Data Cache > Instruction Cache
+// (datos son más críticos que instrucciones)
+
+if (MC_START_D) begin
+    // Servir Data Cache
+    MC_ADDRESS = MC_ADDRESS_D;
+    MC_RW = MC_RW_D;
+    MC_DATA_WRITE = MC_DATA_WRITE_D;
+    // Cuando termine: MC_END_D = 1
+end
+else if (MC_START_I) begin
+    // Servir Instruction Cache
+    MC_ADDRESS = MC_ADDRESS_I;
+    MC_RW = 0;  // Siempre lectura para instrucciones
+    // Cuando termine: MC_END_I = 1
+end
+else begin
+    // Direct from Control Unit (modo sin cachés)
+    MC_ADDRESS = ADDRESS;  // o PC/MEM_ADDRESS según Opción A/B
+    MC_RW = R/W;
+    // Cuando termine: MC_END = 1
+end
+```
+
+**Nota**: Memory Control es **agnóstico** a si hay cachés. Solo responde a requests de START y genera señales END. La capa de cachés es opcional y transparente.
+
+Ver: [[Cache System Overview]], [[GUIA-CONEXION-CACHES]], y [[Correcciones de Conectividad - S-MIPS Processor]] para integración completa.
 
 ## Estimación de Trabajo
 

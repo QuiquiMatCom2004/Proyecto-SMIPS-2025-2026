@@ -263,6 +263,125 @@ Data Path → Data Cache → Memory Control → RAM
 **Latencia LW (hit)**: 1 cycle
 **Mejora de performance**: Significativa en loops
 
+## Sistema de Bypass (Diseño Robusto)
+
+### Principio de Diseño
+
+El procesador debe funcionar **con o sin cachés**, permitiendo que las cachés sean opcionales y reemplazables sin afectar el resto del sistema.
+
+### Parámetros de Configuración
+
+**En [[Control Unit]]:**
+
+| Parámetro | Tipo | Valor por Defecto | Descripción |
+|-----------|------|-------------------|-------------|
+| `I_CACHE_ENABLE` | 1 bit | 0 (deshabilitado) | Enable de Instruction Cache |
+| `D_CACHE_ENABLE` | 1 bit | 0 (deshabilitado) | Enable de Data Cache |
+
+### Modos de Operación
+
+#### Modo 1: Sin Cachés (I_CACHE_ENABLE=0, D_CACHE_ENABLE=0)
+
+```
+Control Unit ──→ Memory Control ──→ RAM (fetch de instrucciones)
+Data Path ──→ Memory Control ──→ RAM (LW/SW)
+```
+
+- Control Unit usa señales directas: `START_MC`, `MC_END`
+- Memory Control recibe `ADDRESS` directamente (PC o ALU result según el caso)
+- **Sistema funciona igual que sin cachés instaladas**
+- **Ventaja**: Si las cachés fallan, se pueden deshabilitar y el procesador sigue funcionando
+
+#### Modo 2: Solo I-Cache (I_CACHE_ENABLE=1, D_CACHE_ENABLE=0)
+
+```
+Control Unit ──→ I-Cache ──→ Memory Control ──→ RAM (on miss)
+                    ↓ (on hit)
+              Instrucción (1 cycle)
+
+Data Path ──→ Memory Control ──→ RAM (LW/SW directo)
+```
+
+- Fetch de instrucciones pasa por I-Cache
+- Accesos a datos (LW/SW) van directo a Memory Control
+- **Hybrid performance**: Instrucciones rápidas, datos a velocidad RAM
+
+#### Modo 3: Ambas Cachés (I_CACHE_ENABLE=1, D_CACHE_ENABLE=1)
+
+```
+Control Unit ──→ I-Cache ──→ Memory Control ──→ RAM (on miss)
+                    ↓ (on hit)
+              Instrucción (1 cycle)
+
+Data Path ──→ D-Cache ──→ Memory Control ──→ RAM (on miss)
+                ↓ (on hit)
+            Dato (1 cycle)
+```
+
+- Máximo rendimiento cuando hay hit en ambas cachés
+- Memory Control arbitra entre requests de I-Cache y D-Cache si ambas tienen miss
+
+### Multiplexado de Señales
+
+**En Control Unit (Estado Fetch):**
+
+```verilog
+// Seleccionar destino de fetch request
+if (I_CACHE_ENABLE) begin
+    // Fetch via I-Cache
+    I_CACHE_FETCH_REQ = 1;
+    wait_for_I_CACHE_READY = 1;
+end
+else begin
+    // Fetch directo a Memory Control
+    MC_START = 1;
+    wait_for_MC_END = 1;
+end
+```
+
+**En Data Path (LW/SW):**
+
+```verilog
+// Seleccionar destino de data request
+if (D_CACHE_ENABLE) begin
+    // Via D-Cache
+    D_CACHE_READ_REQ = (opcode == LW || opcode == POP);
+    D_CACHE_WRITE_REQ = (opcode == SW || opcode == PUSH);
+    wait_for_D_CACHE_READY = 1;
+end
+else begin
+    // Directo a Memory Control
+    MC_NEEDED = 1;
+    wait_for_MC_END = 1;
+end
+```
+
+### Ventajas del Sistema de Bypass
+
+1. **Desarrollo incremental**: Implementar procesador sin cachés primero, agregar cachés después
+2. **Debugging**: Deshabilitar cachés para aislar problemas
+3. **Robustez**: Si una caché falla, se puede deshabilitar sin romper el sistema
+4. **Testing**: Comparar resultados con/sin caché para validar correctitud
+5. **Flexibilidad**: Cambiar entre direct-mapped, set-associative, fully-associative sin modificar CPU
+
+### Implementación en Logisim
+
+**Componentes necesarios**:
+
+1. **Multiplexores en Control Unit**:
+   - MUX para seleccionar entre I_CACHE_READY y MC_END
+   - MUX para seleccionar entre INSTRUCTION (I-Cache) o INST_IN (Memory Control)
+
+2. **Multiplexores en Data Path**:
+   - MUX para seleccionar entre D_CACHE_READY y MC_END
+   - MUX para seleccionar entre DATA (D-Cache) o MEMORY_DATA (Memory Control)
+
+3. **Constantes configurables**:
+   - `I_CACHE_ENABLE` como pin de entrada o constante en CPU
+   - `D_CACHE_ENABLE` como pin de entrada o constante en CPU
+
+Ver [[CONEXIONES-CACHE-CPU]] y [[GUIA-CONEXION-CACHES]] para diagramas detallados de conexión.
+
 ## Interfaz de Instruction Cache
 
 ### Entradas

@@ -144,6 +144,38 @@ Big[0]=0 → Little[31]=0
 = 0xF77DB57B
 ```
 
+## Instancias Necesarias en Memory Control
+
+Memory Control requiere **5 instancias** del Little-Endian Converter:
+
+### Para Lectura (RAM → CPU)
+- **Converter 0**: O0_raw → O0_conv
+- **Converter 1**: O1_raw → O1_conv
+- **Converter 2**: O2_raw → O2_conv
+- **Converter 3**: O3_raw → O3_conv
+
+### Para Escritura (CPU → RAM)
+- **Converter 4**: DATA_WRITE → DATA_WRITE_conv
+
+### Diagrama de Conexión
+
+```
+Memory Control
+├─ FROM RAM (Lectura):
+│  ├─ O0_raw (32 bits) ──► Little-Endian Converter 0 ──► O0_conv
+│  ├─ O1_raw (32 bits) ──► Little-Endian Converter 1 ──► O1_conv
+│  ├─ O2_raw (32 bits) ──► Little-Endian Converter 2 ──► O2_conv
+│  └─ O3_raw (32 bits) ──► Little-Endian Converter 3 ──► O3_conv
+│      └─► Word Selector (selecciona 1 de 4)
+│          └─► DATA_READ to CPU
+│
+└─ TO RAM (Escritura):
+   └─ DATA_WRITE (CPU, little-endian)
+       └─► Little-Endian Converter 4
+           └─► DATA_WRITE_conv (big-endian)
+               └─► I0/I1/I2/I3 (según MASK)
+```
+
 ## Integración en Memory Control
 
 ### Para Lectura (RAM → CPU)
@@ -151,13 +183,13 @@ Big[0]=0 → Little[31]=0
 ```
 RAM outputs O0-O3 (big-endian)
       ↓
-Little-Endian Converter (4 instancias)
-      ├─ Converter 0: O0_big → O0_little
-      ├─ Converter 1: O1_big → O1_little
-      ├─ Converter 2: O2_big → O2_little
-      └─ Converter 3: O3_big → O3_little
+Little-Endian Converter (4 instancias paralelas)
+      ├─ Converter 0: O0_raw → O0_little
+      ├─ Converter 1: O1_raw → O1_little
+      ├─ Converter 2: O2_raw → O2_little
+      └─ Converter 3: O3_raw → O3_little
       ↓
-Word Selector
+Word Selector (selecciona según word_offset)
       ↓
 DATA_READ to CPU (correcto)
 ```
@@ -167,11 +199,13 @@ DATA_READ to CPU (correcto)
 ```
 DATA_WRITE from CPU (little-endian)
       ↓
-Little-Endian Converter
+Little-Endian Converter (1 instancia)
       ↓
 Converted data (big-endian)
       ↓
-I0-I3 to RAM (correcto)
+Distribuido a I0-I3 según MASK
+      ↓
+RAM (almacena correctamente)
 ```
 
 ## Conexión en Memory Control
@@ -307,15 +341,19 @@ CPU recibe: 0xDEADBEEF ✓
 
 **Costo**: ~34 componentes (2 splitters + conexiones)
 
-### Instancias Necesarias en Memory Control
+### Resumen de Instancias Necesarias
 
-1. **Para O0** - Convertir salida RAM word 0
-2. **Para O1** - Convertir salida RAM word 1
-3. **Para O2** - Convertir salida RAM word 2
-4. **Para O3** - Convertir salida RAM word 3
-5. **Para DATA_WRITE** - Convertir dato de escritura
+| Instancia | Propósito | Entrada | Salida | Destino |
+|-----------|-----------|---------|--------|---------|
+| Converter 0 | Lectura | O0_raw (RAM) | O0_conv | Word Selector |
+| Converter 1 | Lectura | O1_raw (RAM) | O1_conv | Word Selector |
+| Converter 2 | Lectura | O2_raw (RAM) | O2_conv | Word Selector |
+| Converter 3 | Lectura | O3_raw (RAM) | O3_conv | Word Selector |
+| Converter 4 | Escritura | DATA_WRITE (CPU) | DATA_WRITE_conv | I0-I3 (según MASK) |
 
-**Total**: 5 instancias del subcircuito
+**Total**: 5 instancias del subcircuito Little-Endian Converter
+
+**Nota**: Todas las instancias usan el mismo subcircuito, ya que bit reversal es una operación simétrica (reversible).
 
 ## Optimización (Avanzado)
 
