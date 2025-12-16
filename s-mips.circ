@@ -3700,6 +3700,9 @@
       <a name="size" val="30"/>
       <a name="inputs" val="2"/>
     </comp>
+    <comp lib="0" loc="(500,160)" name="Tunnel">
+      <a name="label" val="Read-Inst"/>
+    </comp>
     <comp lib="4" loc="(950,420)" name="D Flip-Flop">
       <a name="trigger" val="falling"/>
       <a name="label" val="Wait"/>
@@ -3795,9 +3798,6 @@
     </comp>
     <comp lib="3" loc="(1120,690)" name="Comparator">
       <a name="width" val="6"/>
-    </comp>
-    <comp lib="0" loc="(500,160)" name="Tunnel">
-      <a name="label" val="Read-Inst"/>
     </comp>
     <comp lib="0" loc="(1420,510)" name="Pin">
       <a name="facing" val="west"/>
@@ -4590,7 +4590,6 @@
     <wire from="(800,640)" to="(800,680)"/>
     <wire from="(870,210)" to="(900,210)"/>
     <wire from="(870,410)" to="(900,410)"/>
-    <wire from="(870,770)" to="(900,770)"/>
     <wire from="(430,150)" to="(440,150)"/>
     <wire from="(430,70)" to="(440,70)"/>
     <wire from="(430,190)" to="(440,190)"/>
@@ -4605,6 +4604,8 @@
     <wire from="(800,640)" to="(810,640)"/>
     <wire from="(860,620)" to="(870,620)"/>
     <wire from="(890,610)" to="(900,610)"/>
+    <wire from="(890,770)" to="(900,770)"/>
+    <wire from="(880,760)" to="(890,760)"/>
     <wire from="(680,240)" to="(690,240)"/>
     <wire from="(670,470)" to="(680,470)"/>
     <wire from="(730,210)" to="(740,210)"/>
@@ -4615,7 +4616,6 @@
     <wire from="(800,170)" to="(800,180)"/>
     <wire from="(870,200)" to="(870,210)"/>
     <wire from="(870,400)" to="(870,410)"/>
-    <wire from="(870,760)" to="(870,770)"/>
     <wire from="(890,180)" to="(890,190)"/>
     <wire from="(890,610)" to="(890,680)"/>
     <wire from="(890,390)" to="(890,610)"/>
@@ -4626,13 +4626,13 @@
     <wire from="(420,460)" to="(440,460)"/>
     <wire from="(480,80)" to="(500,80)"/>
     <wire from="(480,200)" to="(500,200)"/>
+    <wire from="(770,800)" to="(800,800)"/>
+    <wire from="(770,760)" to="(800,760)"/>
     <wire from="(870,700)" to="(900,700)"/>
     <wire from="(380,510)" to="(390,510)"/>
     <wire from="(90,260)" to="(100,260)"/>
     <wire from="(930,620)" to="(940,620)"/>
     <wire from="(790,480)" to="(800,480)"/>
-    <wire from="(770,780)" to="(780,780)"/>
-    <wire from="(770,740)" to="(780,740)"/>
     <wire from="(680,410)" to="(690,410)"/>
     <wire from="(730,380)" to="(740,380)"/>
     <wire from="(720,490)" to="(730,490)"/>
@@ -4665,7 +4665,6 @@
     <wire from="(890,190)" to="(900,190)"/>
     <wire from="(860,400)" to="(870,400)"/>
     <wire from="(890,390)" to="(900,390)"/>
-    <wire from="(860,760)" to="(870,760)"/>
     <wire from="(890,750)" to="(900,750)"/>
     <wire from="(680,140)" to="(690,140)"/>
     <wire from="(710,610)" to="(720,610)"/>
@@ -4674,6 +4673,7 @@
     <wire from="(730,200)" to="(730,210)"/>
     <wire from="(730,360)" to="(730,370)"/>
     <wire from="(870,620)" to="(870,630)"/>
+    <wire from="(890,760)" to="(890,770)"/>
     <wire from="(760,680)" to="(800,680)"/>
     <wire from="(380,450)" to="(380,480)"/>
     <wire from="(1460,210)" to="(1470,210)"/>
@@ -4685,14 +4685,14 @@
     <wire from="(420,400)" to="(440,400)"/>
     <wire from="(420,520)" to="(440,520)"/>
     <wire from="(480,140)" to="(500,140)"/>
+    <wire from="(770,780)" to="(800,780)"/>
+    <wire from="(770,740)" to="(800,740)"/>
     <wire from="(380,450)" to="(390,450)"/>
     <wire from="(930,200)" to="(940,200)"/>
     <wire from="(930,400)" to="(940,400)"/>
     <wire from="(930,760)" to="(940,760)"/>
     <wire from="(360,470)" to="(360,530)"/>
     <wire from="(790,340)" to="(800,340)"/>
-    <wire from="(770,800)" to="(780,800)"/>
-    <wire from="(770,760)" to="(780,760)"/>
     <wire from="(860,690)" to="(870,690)"/>
     <wire from="(890,680)" to="(900,680)"/>
     <wire from="(680,310)" to="(690,310)"/>
@@ -4987,10 +4987,6 @@
       <a name="label" val="Jump-Inst"/>
       <a name="labelloc" val="east"/>
     </comp>
-    <comp lib="1" loc="(860,760)" name="NOR Gate">
-      <a name="size" val="70"/>
-      <a name="inputs" val="4"/>
-    </comp>
     <comp lib="0" loc="(1470,330)" name="Pin">
       <a name="facing" val="west"/>
       <a name="output" val="true"/>
@@ -5054,6 +5050,10 @@
     <comp lib="0" loc="(1460,140)" name="Tunnel">
       <a name="facing" val="east"/>
       <a name="label" val="Type J"/>
+    </comp>
+    <comp lib="1" loc="(880,760)" name="NOR Gate">
+      <a name="size" val="70"/>
+      <a name="inputs" val="4"/>
     </comp>
     <comp lib="0" loc="(1460,330)" name="Tunnel">
       <a name="facing" val="east"/>
@@ -12278,8 +12278,8 @@
       <text font-family="SansSerif" font-size="12" text-anchor="middle" x="635" y="378">ready_inst</text>
       <text font-family="SansSerif" font-size="12" text-anchor="middle" x="707" y="378">ready_data</text>
       <text font-family="SansSerif" font-size="12" text-anchor="middle" x="781" y="378">ready_write</text>
-      <text font-family="SansSerif" font-size="28" font-weight="bold" text-anchor="middle" x="548" y="295">RAM</text>
-      <text font-family="SansSerif" font-size="28" font-weight="bold" text-anchor="middle" x="551" y="325">ACCESS</text>
+      <text font-family="SansSerif" font-size="28" font-weight="bold" text-anchor="middle" x="548" y="295">Memory</text>
+      <text font-family="SansSerif" font-size="28" font-weight="bold" text-anchor="middle" x="551" y="325">Control</text>
       <circ-port height="8" pin="120,110" width="8" x="316" y="236"/>
       <circ-port height="8" pin="120,220" width="8" x="316" y="276"/>
       <circ-port height="8" pin="120,330" width="8" x="316" y="316"/>
